@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="description" content="Sprout — Little minds, big growth. A learning app for ages 2–8 covering language, maths, pronunciation and reading."/>
+<meta name="theme-color" content="#2C6E3F"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Sprout — Little Minds, Big Growth</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   SPROUT — COMPLETE APP STYLESHEET
+   Modules 1 · 2 · 3 · 4 · 6
+═══════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7FDF4;
+  --surface:#FFFFFF;
+  --surface2:#F7F3ED;
+  --surface3:#F0EBE2;
+  --border:#E8E0D4;
+  --text:#2C2416;
+  --muted:#8A7A66;
+  --muted2:#B5A898;
+
+  --lang:#E85555;
+  --lang-s:#FFF0F0;
+  --lang-d:#C03030;
+  --math:#4ECDC4;
+  --math-s:#EDFAF9;
+  --math-d:#3BB5AD;
+  --pron:#FFB347;
+  --pron-s:#FFF8EE;
+  --pron-d:#E09030;
+  --progress-c:#A78BFA;
+  --progress-s:#F3EEFF;
+  --success:#52C97A;
+  --success-s:#EDFAF2;
+  --warn:#FF6B35;
+
+  --r:16px;--rl:22px;--rpill:100px;
+  --sh:0 2px 16px rgba(0,0,0,0.06);
+  --shh:0 8px 32px rgba(0,0,0,0.13);
+  --sh-color-lang:0 6px 24px rgba(255,107,107,0.28);
+  --sh-color-math:0 6px 24px rgba(78,205,196,0.28);
+  --sh-color-pron:0 6px 24px rgba(255,179,71,0.28);
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+.fredoka{font-family:'Fredoka One',sans-serif}
+button{font-family:'Nunito',sans-serif}
+input,select{font-family:'Nunito',sans-serif}
+
+/* ═══════ APP SHELL ═══════ */
+.app-shell{display:flex;min-height:100vh}
+
+/* ═══════ SIDEBAR ═══════ */
+.sidebar{
+  width:230px;flex-shrink:0;
+  background:var(--surface);
+  border-right:1.5px solid var(--border);
+  display:flex;flex-direction:column;
+  padding:0;
+  position:sticky;top:0;height:100vh;
+  overflow-y:auto;overflow-x:hidden;
+  transition:width .25s cubic-bezier(.4,0,.2,1);
+  z-index:40;
+}
+.sidebar.collapsed{width:72px}
+.sidebar-inner{padding:20px 14px;display:flex;flex-direction:column;gap:4px;height:100%}
+
+.brand-row{display:flex;align-items:center;gap:10px;padding:8px 6px 20px;border-bottom:1.5px solid var(--border);margin-bottom:8px}
+.brand-logo{width:44px;height:44px;border-radius:15px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#2C6E3F;box-shadow:0 4px 14px rgba(44,110,63,.35)}
+.brand-text{overflow:hidden;white-space:nowrap}
+.brand-name{font-family:'Fredoka One',sans-serif;font-size:24px;line-height:1;color:#2C6E3F}
+.brand-sub{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#5DCAA5}
+.sidebar.collapsed .brand-text{display:none}
+
+.nav-section-label{font-size:9px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted2);padding:10px 8px 4px;white-space:nowrap;overflow:hidden}
+.sidebar.collapsed .nav-section-label{opacity:0}
+
+.nav-item{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 10px;border-radius:var(--r);
+  cursor:pointer;transition:all .17s;
+  font-weight:800;font-size:14px;color:var(--muted);
+  border:none;background:transparent;width:100%;text-align:left;
+  white-space:nowrap;overflow:hidden;
+  position:relative;
+}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{color:var(--text)}
+.nav-item.active.s-lang{background:#EAF3DE;color:#2C6E3F}
+.nav-item.active.s-math{background:var(--math-s);color:var(--math)}
+.nav-item.active.s-pron{background:var(--pron-s);color:var(--pron)}
+.nav-item.active.s-prog{background:var(--progress-s);color:var(--progress-c)}
+.nav-icon{
+  width:36px;height:36px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  background:var(--surface2);transition:.17s;
+}
+.nav-item.active.s-lang .nav-icon{background:#2C6E3F;color:#fff}
+.nav-item.active.s-math .nav-icon{background:var(--math);color:#fff}
+.nav-item.active.s-pron .nav-icon{background:var(--pron);color:#000}
+.nav-item.active.s-prog .nav-icon{background:var(--progress-c);color:#fff}
+.nav-label-text{flex:1;overflow:hidden}
+.nav-badge{background:var(--lang);color:#fff;font-size:9px;font-weight:900;padding:2px 6px;border-radius:99px;flex-shrink:0}
+.nav-badge.math{background:var(--math)}
+.nav-badge.pron{background:var(--pron);color:#000}
+.nav-badge.prog{background:var(--progress-c)}
+.sidebar.collapsed .nav-label-text,.sidebar.collapsed .nav-badge{display:none}
+
+.sidebar-footer{margin-top:auto;padding-top:16px;border-top:1.5px solid var(--border)}
+.age-label{font-size:9px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--muted2);display:block;margin-bottom:6px}
+.sidebar.collapsed .age-label{display:none}
+.age-select{
+  width:100%;border:1.5px solid var(--border);border-radius:var(--r);
+  padding:9px 12px;font-weight:800;font-size:12px;
+  background:var(--surface);color:var(--text);cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%238A7A66' d='M5 7L0 2h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:calc(100% - 10px) 50%;
+}
+.sidebar.collapsed .age-select{display:none}
+.sidebar-toggle{
+  display:flex;align-items:center;justify-content:center;
+  gap:8px;padding:8px 10px;border-radius:var(--r);
+  border:none;background:transparent;cursor:pointer;
+  color:var(--muted);font-weight:800;font-size:12px;
+  width:100%;margin-top:8px;transition:.15s;
+}
+.sidebar-toggle:hover{background:var(--surface2)}
+.sidebar.collapsed .sidebar-toggle-text{display:none}
+
+/* ═══════ MAIN ═══════ */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+
+/* ═══════ HEADER / PROGRESS BAR ═══════ */
+.top-header{
+  background:var(--surface);border-bottom:1.5px solid var(--border);
+  padding:14px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  position:sticky;top:0;z-index:30;
+}
+.progress-section{flex:1;min-width:160px}
+.prog-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.prog-title{font-size:11px;font-weight:900;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.prog-pct{font-family:'Fredoka One',sans-serif;font-size:16px;color:var(--text)}
+.prog-track{height:10px;border-radius:var(--rpill);background:var(--surface2);overflow:hidden}
+.prog-fill{height:100%;border-radius:var(--rpill);transition:width .7s cubic-bezier(.34,1.56,.64,1)}
+.prog-fill.lang{background:linear-gradient(90deg,var(--lang),#FF9999)}
+.prog-fill.math{background:linear-gradient(90deg,var(--math),#88E8E2)}
+.prog-fill.pron{background:linear-gradient(90deg,var(--pron),#FFD580)}
+.prog-fill.prog{background:linear-gradient(90deg,var(--progress-c),#C4B5FD)}
+.prog-dots{display:flex;gap:3px;margin-top:5px}
+.prog-dot{width:5px;height:5px;border-radius:50%;background:var(--border);transition:.3s}
+.prog-dot.done.lang{background:var(--lang)}
+.prog-dot.done.math{background:var(--math)}
+.prog-dot.done.pron{background:var(--pron)}
+.prog-dot.done.prog{background:var(--progress-c)}
+
+.streak-widget{display:flex;align-items:center;gap:10px;background:#EAF3DE;border-radius:var(--r);padding:10px 16px;border:1.5px solid #C0DD97}
+.streak-flame{font-size:24px;animation:flicker 2s ease-in-out infinite}
+@keyframes flicker{0%,100%{transform:scale(1) rotate(-2deg)}50%{transform:scale(1.12) rotate(2deg)}}
+.streak-count{font-family:'Fredoka One',sans-serif;font-size:28px;color:var(--warn);line-height:1}
+.streak-label{font-size:10px;font-weight:900;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+
+.xp-widget{display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,#FFF8EE,#FFF0F0);border-radius:var(--r);padding:10px 14px;border:1.5px solid var(--border)}
+.xp-star{font-size:20px}
+.xp-val{font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--warn);line-height:1}
+.xp-label{font-size:10px;font-weight:900;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+
+/* ═══════ CONTENT AREA ═══════ */
+.content{padding:24px;flex:1}
+
+/* ═══════ SHARED UI ═══════ */
+.section-label{font-size:9px;font-weight:900;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.big-title{font-family:'Fredoka One',sans-serif;font-size:30px;color:var(--text);margin-bottom:4px;line-height:1.1}
+.sub-title{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:22px}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 13px;border-radius:var(--rpill);font-size:10px;font-weight:900;letter-spacing:.5px;text-transform:uppercase}
+
+.btn{
+  padding:11px 22px;border-radius:var(--rpill);border:none;
+  font-weight:800;font-size:13px;cursor:pointer;transition:all .15s;letter-spacing:.3px;
+}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.btn:active{transform:scale(.97)}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
+.btn-outline:hover{background:var(--surface2);color:var(--text);border-color:var(--text)}
+
+.tab-bar{display:flex;gap:5px;background:var(--surface2);border-radius:var(--rpill);padding:4px;width:fit-content;margin-bottom:22px;flex-wrap:wrap}
+.tab-btn{padding:7px 16px;border-radius:var(--rpill);font-weight:800;font-size:12px;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:.15s}
+.tab-btn.active{background:var(--surface);color:var(--text);box-shadow:var(--sh)}
+
+/* ═══════ CARD GRID ═══════ */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin-bottom:28px}
+.card{
+  background:var(--surface);border-radius:var(--rl);border:1.5px solid var(--border);
+  padding:20px;cursor:pointer;transition:all .2s;box-shadow:var(--sh);position:relative;overflow:hidden;
+}
+.card:hover{transform:translateY(-3px)}
+.card:hover.lang{box-shadow:var(--sh-color-lang);border-color:var(--lang)}
+.card:hover.math{box-shadow:var(--sh-color-math);border-color:var(--math)}
+.card:hover.pron{box-shadow:var(--sh-color-pron);border-color:var(--pron)}
+.card-corner{position:absolute;top:0;right:0;width:64px;height:64px;border-radius:0 var(--rl) 0 100%;opacity:.1}
+.card.lang .card-corner{background:var(--lang)}
+.card.math .card-corner{background:var(--math)}
+.card.pron .card-corner{background:var(--pron)}
+.card-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.card.lang .card-icon{background:var(--lang-s)}
+.card.math .card-icon{background:var(--math-s)}
+.card.pron .card-icon{background:var(--pron-s)}
+.card-type{font-size:9px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
+.card.lang .card-type{color:var(--lang)}
+.card.math .card-type{color:var(--math)}
+.card.pron .card-type{color:var(--pron)}
+.card-content{font-family:'Fredoka One',sans-serif;font-size:26px;color:var(--text);margin-bottom:5px;line-height:1.1}
+.card-hint{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:12px}
+.card-foot{display:flex;align-items:center;justify-content:space-between}
+.card-age{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:var(--rpill)}
+.card.lang .card-age{background:var(--lang-s);color:var(--lang)}
+.card.math .card-age{background:var(--math-s);color:var(--math)}
+.card.pron .card-age{background:var(--pron-s);color:var(--pron)}
+.card-play{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:.15s;font-size:11px}
+.card.lang .card-play{background:var(--lang);color:#fff}
+.card.math .card-play{background:var(--math);color:#fff}
+.card.pron .card-play{background:var(--pron);color:#000}
+.card-play:hover{transform:scale(1.18)}
+
+/* ═══════ MODAL ═══════ */
+.modal-overlay{position:fixed;inset:0;background:rgba(44,36,22,.45);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px;backdrop-filter:blur(5px)}
+.modal{background:var(--surface);border-radius:var(--rl);padding:28px;max-width:460px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.22);animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.82);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.modal-close{width:32px;height:32px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:.15s}
+.modal-close:hover{background:var(--surface2)}
+.modal-big{font-family:'Fredoka One',sans-serif;font-size:80px;text-align:center;padding:20px;background:var(--surface2);border-radius:var(--rl);margin-bottom:14px;line-height:1}
+.modal-prompt{font-size:12px;font-weight:800;color:var(--muted);text-align:center;margin-bottom:18px;text-transform:uppercase;letter-spacing:.5px}
+.modal-acts{display:flex;gap:10px}
+.math-display{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.math-obj{width:38px;height:38px;border-radius:11px;background:var(--math-s);border:2px solid var(--math);display:flex;align-items:center;justify-content:center;font-size:18px;animation:objIn .35s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes objIn{from{transform:scale(0)}to{transform:scale(1)}}
+.math-op-big{font-family:'Fredoka One',sans-serif;font-size:26px;color:var(--math)}
+.math-res{font-family:'Fredoka One',sans-serif;font-size:26px;color:var(--text)}
+
+/* ═══════ SUCCESS ═══════ */
+.success-overlay{position:fixed;inset:0;pointer-events:none;z-index:300;display:flex;align-items:center;justify-content:center}
+.success-burst{display:none;flex-direction:column;align-items:center;gap:10px}
+.success-burst.show{display:flex;animation:burstIn .45s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes burstIn{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+.burst-wrap{position:relative;width:110px;height:110px}
+.b-ring{position:absolute;border-radius:50%;animation:ringPop 1s ease-out both}
+@keyframes ringPop{0%{transform:scale(0);opacity:1}100%{transform:scale(2.8);opacity:0}}
+.b-star{position:absolute;font-size:46px;top:50%;left:50%;transform:translate(-50%,-50%);animation:spinIn .55s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes spinIn{from{transform:translate(-50%,-50%) scale(0) rotate(-180deg)}to{transform:translate(-50%,-50%) scale(1) rotate(0)}}
+.success-label{font-family:'Fredoka One',sans-serif;font-size:30px;color:var(--success);animation:labelUp .4s .15s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes labelUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.confetti-p{position:fixed;width:9px;height:9px;border-radius:2px;pointer-events:none;z-index:301;animation:cFall 2s ease-in both}
+@keyframes cFall{0%{opacity:1;transform:translateY(-10px) rotate(0)}100%{opacity:0;transform:translateY(105vh) rotate(540deg)}}
+
+/* ═══════ SHAKE ═══════ */
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.shake{animation:shake .38s ease both!important}
+
+/* ═══════ MODULE 2 — LITERACY ═══════ */
+.lv-bar{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.lv-btn{padding:8px 17px;border-radius:var(--rpill);border:1.5px solid var(--border);background:var(--surface);font-weight:800;font-size:12px;cursor:pointer;color:var(--muted);transition:.15s}
+.lv-btn.active{background:var(--lang-s);color:var(--lang);border-color:var(--lang)}
+.lv-btn:hover:not(.active){border-color:var(--lang);color:var(--lang)}
+
+/* L1 Phonics */
+.phonics-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px 0}
+.big-letter{font-family:'Fredoka One',sans-serif;font-size:150px;line-height:1;color:var(--lang);cursor:pointer;transition:.2s;user-select:none;text-shadow:0 6px 28px rgba(255,107,107,.22)}
+.big-letter:hover{transform:scale(1.07)}
+.big-letter:active{transform:scale(.93)}
+.big-letter.lclicked{animation:lPop .38s cubic-bezier(.34,1.56,.64,1)}
+@keyframes lPop{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.letter-chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.lchip{width:50px;height:50px;border-radius:14px;background:var(--lang-s);border:1.5px solid transparent;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--lang);cursor:pointer;transition:.15s}
+.lchip:hover,.lchip.act{background:var(--lang);color:#fff;border-color:var(--lang);transform:scale(1.1)}
+
+/* L2 Spell */
+.spell-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;padding:16px 0}
+.drop-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.dbox{width:56px;height:66px;border-radius:13px;border:2px dashed var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',sans-serif;font-size:26px;transition:.2s;position:relative}
+.dbox.filled{border:2px solid var(--lang);background:var(--lang-s);color:var(--lang)}
+.dbox.hover-over{border-color:var(--lang);background:rgba(255,107,107,.08);transform:scale(1.09)}
+.dbox .bidx{position:absolute;bottom:4px;font-size:8px;font-weight:900;color:var(--muted2);letter-spacing:.4px}
+.lbank{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.dltr{width:50px;height:50px;border-radius:13px;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',sans-serif;font-size:20px;cursor:grab;transition:.15s;box-shadow:var(--sh);user-select:none}
+.dltr:hover{box-shadow:var(--shh);transform:translateY(-2px)}
+.dltr:active{cursor:grabbing;transform:scale(1.1)}
+.dltr.used{opacity:.25;pointer-events:none}
+
+/* L3 Scramble */
+.scramble-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:12px 0}
+.sent-drop{
+  display:flex;gap:9px;min-height:60px;
+  border:2px dashed var(--border);border-radius:var(--rl);
+  padding:10px 14px;flex-wrap:wrap;align-items:center;
+  width:100%;max-width:480px;transition:.2s;background:var(--surface2);
+}
+.sent-drop.hover-over{border-color:var(--lang);background:var(--lang-s)}
+.wblock{padding:9px 16px;border-radius:11px;font-family:'Fredoka One',sans-serif;font-size:17px;cursor:grab;transition:.15s;user-select:none;white-space:nowrap}
+.wblock:active{cursor:grabbing;transform:scale(1.05)}
+.wblock:hover{transform:translateY(-2px);box-shadow:var(--sh)}
+.wblock.placed{opacity:.3;pointer-events:none}
+.wpool{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;min-height:48px;padding:6px}
+.wblock.subj{background:var(--lang-s);color:var(--lang);border:1.5px solid rgba(255,107,107,.3)}
+.wblock.verb{background:var(--math-s);color:var(--math);border:1.5px solid rgba(78,205,196,.3)}
+.wblock.obj{background:var(--pron-s);color:var(--pron-d);border:1.5px solid rgba(255,179,71,.3)}
+
+/* ═══════ MODULE 3 — PRONUNCIATION ═══════ */
+.pron-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:560px){.pron-grid{grid-template-columns:1fr}}
+.pron-card{background:var(--surface);border-radius:var(--rl);border:1.5px solid var(--border);padding:22px;box-shadow:var(--sh)}
+.word-big{font-family:'Fredoka One',sans-serif;font-size:56px;color:var(--text);text-align:center;margin:14px 0;line-height:1}
+.syl-span{display:inline-block;transition:.2s}
+.syl-span.lit{color:var(--pron);transform:scale(1.12)}
+.phoneme-row{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin:6px 0 14px}
+.ph-chip{padding:4px 11px;border-radius:var(--rpill);background:var(--pron-s);color:var(--pron-d);font-weight:800;font-size:12px}
+
+/* Mic */
+.mic-area{display:flex;flex-direction:column;align-items:center;gap:14px;padding:14px 0}
+.mic-ring-wrap{position:relative;width:96px;height:96px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.m-ring{position:absolute;border-radius:50%;border:2px solid var(--pron);opacity:0}
+.m-ring.r1{width:96px;height:96px}
+.m-ring.r2{width:74px;height:74px}
+.m-ring.r3{width:56px;height:56px}
+.mic-core{
+  width:54px;height:54px;border-radius:50%;
+  background:var(--pron);display:flex;align-items:center;justify-content:center;
+  transition:.3s;box-shadow:0 4px 20px rgba(255,179,71,.4);z-index:2;position:relative;
+}
+.mic-core.list{background:#FF6B6B;box-shadow:0 4px 24px rgba(255,107,107,.5);animation:micPulse .75s ease-in-out infinite}
+.mic-core.ok{background:var(--success)}
+@keyframes micPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.mic-core svg{width:22px;height:22px;fill:#fff}
+.rp{animation:rOut 1.1s ease-out infinite}
+@keyframes rOut{0%{transform:scale(.75);opacity:.85}100%{transform:scale(1.9);opacity:0}}
+.rp.r2{animation-delay:.28s}
+.rp.r3{animation-delay:.56s}
+.vol-strip{display:flex;gap:3px;align-items:flex-end;height:36px}
+.vbar{width:7px;border-radius:3px;background:var(--border);transition:height .08s,background .08s}
+.vbar.on{background:var(--pron)}
+.mic-txt{font-weight:800;font-size:12px;color:var(--muted);text-align:center;min-height:18px}
+.mic-txt.list{color:#FF6B6B}
+.mic-txt.ok{color:var(--success)}
+.fb-box{border-radius:var(--r);padding:16px;margin-top:10px;display:none;transition:.3s}
+.fb-box.perfect{background:var(--success-s);border:1.5px solid var(--success)}
+.fb-box.close{background:var(--pron-s);border:1.5px solid var(--pron)}
+.fb-box.miss{background:var(--lang-s);border:1.5px solid var(--lang)}
+.fb-icon{font-size:26px;margin-bottom:6px}
+.fb-title{font-family:'Fredoka One',sans-serif;font-size:18px;margin-bottom:3px}
+.fb-tip{font-size:12px;font-weight:700;color:var(--muted);line-height:1.5}
+.word-picker{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.wp-btn{padding:6px 13px;border-radius:var(--rpill);border:1.5px solid var(--border);background:var(--surface);font-weight:800;font-size:11px;cursor:pointer;transition:.15s}
+.wp-btn.active{background:var(--pron-s);color:var(--pron-d);border-color:var(--pron)}
+
+/* ═══════ MODULE 4 — MATH ═══════ */
+.math-mode-tabs{display:flex;gap:7px;margin-bottom:20px;flex-wrap:wrap}
+.mmt{padding:8px 16px;border-radius:var(--rpill);border:1.5px solid var(--border);background:var(--surface);font-weight:800;font-size:12px;cursor:pointer;color:var(--muted);transition:.15s}
+.mmt.active{background:var(--math-s);color:var(--math);border-color:var(--math)}
+
+/* Counting */
+.counting-stage{display:flex;flex-direction:column;align-items:center;gap:18px}
+.cnt-num{font-family:'Fredoka One',sans-serif;font-size:80px;color:var(--math);line-height:1;transition:.2s;min-width:90px;text-align:center}
+.cnt-num.np{animation:npPop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes npPop{0%,100%{transform:scale(1)}50%{transform:scale(1.28)}}
+.cnt-word{font-family:'Fredoka One',sans-serif;font-size:22px;color:var(--muted);min-height:30px;transition:.3s}
+.circles-area{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:380px}
+.cc{
+  width:52px;height:52px;border-radius:50%;
+  border:2.5px solid var(--math);background:transparent;
+  cursor:pointer;transition:all .22s;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.cc.hit{background:var(--math);animation:ccPop .32s cubic-bezier(.34,1.56,.64,1)}
+@keyframes ccPop{0%{transform:scale(0)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.cc:hover:not(.hit){background:var(--math-s);transform:scale(1.1)}
+
+/* Arithmetic / Number Line */
+.arith-stage{display:flex;flex-direction:column;align-items:center;gap:18px;padding:8px 0}
+.eq-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+.eq-n{font-family:'Fredoka One',sans-serif;font-size:50px;color:var(--text)}
+.eq-op{font-family:'Fredoka One',sans-serif;font-size:38px;color:var(--math)}
+.eq-box{width:54px;height:62px;border-radius:13px;border:2.5px dashed var(--math);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',sans-serif;font-size:34px;color:var(--math);transition:.2s}
+.eq-box.fill{background:var(--math-s);border-style:solid}
+.eq-eq{font-family:'Fredoka One',sans-serif;font-size:38px;color:var(--muted)}
+.nl-wrap{width:100%;max-width:460px;position:relative;padding:0 8px}
+.nl-track{position:relative;height:8px;border-radius:4px;background:var(--border);margin:26px 0 10px}
+.nl-fill{height:100%;border-radius:4px;background:var(--math);transition:width .18s}
+.nl-ticks{display:flex;justify-content:space-between}
+.tick{display:flex;flex-direction:column;align-items:center;gap:3px}
+.tick-ln{width:2px;height:9px;background:var(--border);border-radius:1px}
+.tick-lb{font-family:'Fredoka One',sans-serif;font-size:12px;color:var(--muted)}
+.tick-lb.hl{color:var(--math);font-size:14px}
+.nl-slider{
+  width:100%;-webkit-appearance:none;appearance:none;
+  height:8px;border-radius:4px;background:transparent;
+  outline:none;cursor:pointer;position:absolute;top:0;left:0;margin:0;
+}
+.nl-slider::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:var(--math);border:3px solid #fff;box-shadow:var(--shh);cursor:grab;margin-top:-11px}
+.nl-slider::-webkit-slider-thumb:active{cursor:grabbing;transform:scale(1.15)}
+.nl-slider::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:var(--math);border:3px solid #fff}
+.slider-answer{font-family:'Fredoka One',sans-serif;font-size:20px;color:var(--math);text-align:center;min-height:28px}
+.ok-banner{
+  background:var(--success-s);border:1.5px solid var(--success);
+  border-radius:13px;padding:11px 18px;
+  font-family:'Fredoka One',sans-serif;font-size:16px;color:var(--success);
+  text-align:center;opacity:0;transform:translateY(6px);transition:.3s;
+}
+.ok-banner.show{opacity:1;transform:translateY(0)}
+.arith-quick{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
+.aq{padding:7px 14px;border-radius:var(--rpill);border:1.5px solid var(--border);background:var(--surface);font-family:'Fredoka One',sans-serif;font-size:13px;cursor:pointer;color:var(--muted);transition:.15s}
+.aq:hover{background:var(--math-s);color:var(--math);border-color:var(--math)}
+.aq.cur{background:var(--math-s);color:var(--math);border-color:var(--math)}
+
+/* ═══════════════════════════════════════════════
+   MODULE 6 — PROGRESS & ANALYTICS DASHBOARD
+═══════════════════════════════════════════════ */
+.analytics-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{
+  background:var(--surface);border-radius:var(--rl);border:1.5px solid var(--border);
+  padding:20px;box-shadow:var(--sh);position:relative;overflow:hidden;
+}
+.stat-card::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;opacity:.08}
+.stat-card.lang-c::before{background:var(--lang)}
+.stat-card.math-c::before{background:var(--math)}
+.stat-card.pron-c::before{background:var(--pron)}
+.stat-card.prog-c::before{background:var(--progress-c)}
+.stat-icon{font-size:28px;margin-bottom:10px}
+.stat-label{font-size:9px;font-weight:900;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.stat-val{font-family:'Fredoka One',sans-serif;font-size:38px;line-height:1;margin-bottom:4px}
+.stat-card.lang-c .stat-val{color:var(--lang)}
+.stat-card.math-c .stat-val{color:var(--math)}
+.stat-card.pron-c .stat-val{color:var(--pron)}
+.stat-card.prog-c .stat-val{color:var(--progress-c)}
+.stat-delta{font-size:11px;font-weight:800;color:var(--success);display:flex;align-items:center;gap:3px}
+.stat-delta.neg{color:var(--lang)}
+.mini-bar{height:6px;border-radius:var(--rpill);background:var(--surface2);margin-top:10px;overflow:hidden}
+.mini-fill{height:100%;border-radius:var(--rpill);transition:width 1s cubic-bezier(.34,1.56,.64,1)}
+.stat-card.lang-c .mini-fill{background:linear-gradient(90deg,var(--lang),#FF9999)}
+.stat-card.math-c .mini-fill{background:linear-gradient(90deg,var(--math),#88E8E2)}
+.stat-card.pron-c .mini-fill{background:linear-gradient(90deg,var(--pron),#FFD580)}
+.stat-card.prog-c .mini-fill{background:linear-gradient(90deg,var(--progress-c),#C4B5FD)}
+
+/* Progress Chart */
+.chart-section{background:var(--surface);border-radius:var(--rl);border:1.5px solid var(--border);padding:22px;box-shadow:var(--sh);margin-bottom:20px}
+.chart-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--muted)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.bar-chart{display:flex;align-items:flex-end;gap:10px;height:160px;padding:0 4px}
+.bar-group{flex:1;display:flex;gap:4px;align-items:flex-end;min-width:0}
+.bar-col{flex:1;border-radius:6px 6px 0 0;transition:height 1s cubic-bezier(.34,1.56,.64,1),opacity .3s;cursor:pointer;position:relative;min-width:0}
+.bar-col:hover{filter:brightness(1.08)}
+.bar-col .bar-tip{
+  position:absolute;top:-26px;left:50%;transform:translateX(-50%);
+  background:var(--text);color:#fff;font-size:9px;font-weight:900;
+  padding:2px 6px;border-radius:6px;white-space:nowrap;
+  opacity:0;transition:.15s;pointer-events:none;
+}
+.bar-col:hover .bar-tip{opacity:1}
+.bar-labels{display:flex;gap:10px;margin-top:8px}
+.bar-lbl{flex:1;text-align:center;font-size:9px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+
+/* Activity feed */
+.activity-section{background:var(--surface);border-radius:var(--rl);border:1.5px solid var(--border);padding:22px;box-shadow:var(--sh);margin-bottom:20px}
+.activity-list{display:flex;flex-direction:column;gap:0}
+.activity-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.act-dot{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.act-dot.lang{background:var(--lang-s)}
+.act-dot.math{background:var(--math-s)}
+.act-dot.pron{background:var(--pron-s)}
+.act-body{flex:1;min-width:0}
+.act-title{font-weight:800;font-size:13px;margin-bottom:2px}
+.act-sub{font-size:11px;color:var(--muted);font-weight:700}
+.act-right{text-align:right;flex-shrink:0}
+.act-xp{font-family:'Fredoka One',sans-serif;font-size:16px;color:var(--success)}
+.act-time{font-size:10px;color:var(--muted2);font-weight:700;margin-top:2px}
+
+/* Achievements */
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.badge-card{
+  background:var(--surface);border-radius:var(--rl);border:1.5px solid var(--border);
+  padding:18px 14px;text-align:center;box-shadow:var(--sh);transition:.2s;
+}
+.badge-card.earned{background:linear-gradient(135deg,#FFFBF5,#FFF0F0);border-color:rgba(255,179,71,.4)}
+.badge-card.locked{opacity:.5;filter:grayscale(.6)}
+.badge-card:hover{transform:translateY(-2px);box-shadow:var(--shh)}
+.badge-icon{font-size:36px;margin-bottom:8px;display:block}
+.badge-name{font-family:'Fredoka One',sans-serif;font-size:15px;margin-bottom:4px}
+.badge-desc{font-size:10px;color:var(--muted);font-weight:700;line-height:1.4}
+.badge-earned-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:var(--rpill);background:var(--success-s);color:var(--success);font-size:9px;font-weight:900;letter-spacing:.4px;margin-top:6px}
+
+/* Streak calendar */
+.streak-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:12px}
+.cal-day{height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:var(--muted2)}
+.cal-cell{height:26px;border-radius:7px;background:var(--surface2);transition:.2s;cursor:default}
+.cal-cell.done{background:var(--success)}
+.cal-cell.done-lang{background:var(--lang)}
+.cal-cell.done-math{background:var(--math)}
+.cal-cell.done-pron{background:var(--pron)}
+.cal-cell.today{box-shadow:0 0 0 2px var(--progress-c)}
+
+/* Level progress ring */
+.level-section{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:20px}
+.level-card{
+  background:var(--surface);border-radius:var(--rl);border:1.5px solid var(--border);
+  padding:20px;box-shadow:var(--sh);flex:1;min-width:200px;
+  display:flex;align-items:center;gap:16px;
+}
+.ring-wrap{position:relative;width:72px;height:72px;flex-shrink:0}
+.ring-svg{transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:var(--surface2);stroke-width:8}
+.ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.34,1.56,.64,1)}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-pct{font-family:'Fredoka One',sans-serif;font-size:16px;line-height:1}
+.ring-sub{font-size:8px;font-weight:900;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.level-info .level-name{font-family:'Fredoka One',sans-serif;font-size:18px;margin-bottom:4px}
+.level-info .level-sub{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.next-milestone{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;color:var(--muted);padding:4px 10px;background:var(--surface2);border-radius:var(--rpill);width:fit-content}
+
+/* ═══════ RESPONSIVE ═══════ */
+@media(max-width:700px){
+  .sidebar{width:0;overflow:hidden;border-right:none}
+  .sidebar.mobile-open{width:230px;box-shadow:var(--shh)}
+  .top-header{padding:10px 14px}
+  .content{padding:14px}
+  .cards-grid{grid-template-columns:1fr 1fr}
+  .analytics-grid{grid-template-columns:1fr 1fr}
+  .bar-chart{height:120px}
+  .big-letter{font-size:110px}
+  .mobile-menu-btn{display:flex!important}
+}
+.mobile-menu-btn{
+  display:none;width:36px;height:36px;border-radius:11px;
+  border:1.5px solid var(--border);background:var(--surface);
+  cursor:pointer;align-items:center;justify-content:center;font-size:16px;
+}
+
+/* ══════════════════════════════════════════
+   MODULE 7 — READ ALONG (Ages 3–6)
+══════════════════════════════════════════ */
+:root{--read:#7C5CBF;--read-s:#F0EBFF;--read-d:#5E3EA1;}
+.nav-item.active.s-read{background:var(--read-s);color:var(--read)}
+.nav-item.active.s-read .nav-icon{background:var(--read);color:#fff}
+.nav-badge.read{background:var(--read);color:#fff}
+
+.ra-mode-bar{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.ra-mode-btn{padding:10px 20px;border-radius:var(--rpill);border:1.5px solid var(--border);background:var(--surface);font-weight:800;font-size:13px;cursor:pointer;color:var(--muted);transition:.17s;display:flex;align-items:center;gap:7px;}
+.ra-mode-btn.active{background:var(--read-s);color:var(--read);border-color:var(--read)}
+.ra-mode-btn:hover:not(.active){border-color:var(--read);color:var(--read)}
+.ra-cat-bar{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.ra-cat{padding:7px 15px;border-radius:var(--rpill);border:1.5px solid var(--border);background:var(--surface);font-weight:800;font-size:11px;cursor:pointer;color:var(--muted);transition:.15s;white-space:nowrap}
+.ra-cat.active{background:var(--read-s);color:var(--read);border-color:var(--read)}
+
+.word-reader{display:flex;flex-direction:column;align-items:center;padding:8px 0}
+.wr-card{background:var(--surface);border-radius:28px;border:1.5px solid var(--border);padding:32px 40px;max-width:520px;width:100%;box-shadow:var(--sh);display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden;margin-bottom:20px;}
+.wr-card::before{content:'';position:absolute;top:-40px;right:-40px;width:130px;height:130px;border-radius:50%;background:var(--read-s);}
+.wr-emoji-big{font-size:96px;line-height:1;margin-bottom:16px;animation:emojiFloat 3s ease-in-out infinite;display:block;position:relative}
+@keyframes emojiFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.wr-word{font-family:'Fredoka One',sans-serif;font-size:64px;color:var(--text);line-height:1;margin-bottom:12px;text-align:center;letter-spacing:2px;}
+.wr-word-letter{display:inline-block;cursor:pointer;transition:all .18s;position:relative;}
+.wr-word-letter:hover{color:var(--read);transform:scale(1.18) translateY(-4px)}
+.wr-word-letter.lit{color:var(--read);transform:scale(1.2) translateY(-6px);text-shadow:0 4px 16px rgba(124,92,191,.4);}
+.wr-phonetic{font-size:16px;font-weight:700;color:var(--muted);letter-spacing:1.5px;margin-bottom:8px;text-align:center;font-style:italic;}
+.wr-meaning{background:var(--read-s);border-radius:14px;padding:12px 20px;font-size:14px;font-weight:700;color:var(--read-d);text-align:center;margin-bottom:16px;max-width:320px;line-height:1.5;}
+.wr-syllables{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+.wr-syl{padding:8px 16px;border-radius:var(--rpill);font-family:'Fredoka One',sans-serif;font-size:22px;background:var(--surface2);color:var(--muted);border:1.5px solid var(--border);transition:.2s;cursor:pointer;}
+.wr-syl.lit{background:var(--read);color:#fff;border-color:var(--read);transform:scale(1.1)}
+.wr-syl-sep{font-size:20px;color:var(--border)}
+.word-nav{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.wnav-btn{width:44px;height:44px;border-radius:14px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;font-size:18px;transition:.15s;display:flex;align-items:center;justify-content:center;}
+.wnav-btn:hover{background:var(--read-s);border-color:var(--read)}
+.wnav-counter{font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--muted);padding:0 12px}
+.big-speak-btn{padding:14px 32px;border-radius:var(--rpill);border:none;background:linear-gradient(135deg,var(--read),#A78BFA);color:#fff;font-weight:900;font-size:16px;cursor:pointer;transition:.17s;box-shadow:0 6px 20px rgba(124,92,191,.35);letter-spacing:.4px;display:flex;align-items:center;gap:8px;}
+.big-speak-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(124,92,191,.45)}
+.big-speak-btn:active{transform:scale(.97)}
+.sound-wave{display:flex;gap:3px;align-items:center;height:22px;margin-left:4px}
+.sw-bar{width:4px;border-radius:2px;background:rgba(255,255,255,.7);height:4px;transition:height .1s}
+.speaking .sw-bar:nth-child(1){animation:swAnim .6s ease-in-out infinite}
+.speaking .sw-bar:nth-child(2){animation:swAnim .6s .1s ease-in-out infinite}
+.speaking .sw-bar:nth-child(3){animation:swAnim .6s .2s ease-in-out infinite}
+.speaking .sw-bar:nth-child(4){animation:swAnim .6s .3s ease-in-out infinite}
+.speaking .sw-bar:nth-child(5){animation:swAnim .6s .15s ease-in-out infinite}
+@keyframes swAnim{0%,100%{height:4px}50%{height:18px}}
+.speed-row{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:12px}
+.speed-label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.speed-btn{padding:5px 13px;border-radius:var(--rpill);border:1.5px solid var(--border);background:var(--surface);font-weight:800;font-size:11px;cursor:pointer;color:var(--muted);transition:.15s}
+.speed-btn.active{background:var(--read-s);color:var(--read);border-color:var(--read)}
+.word-tiles{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.word-tile{padding:10px 18px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:'Fredoka One',sans-serif;font-size:17px;cursor:pointer;transition:.17s;display:flex;align-items:center;gap:8px;box-shadow:var(--sh);}
+.word-tile:hover{transform:translateY(-2px);box-shadow:var(--shh);border-color:var(--read)}
+.word-tile.selected{background:var(--read-s);border-color:var(--read);color:var(--read)}
+.word-tile .wt-done{width:18px;height:18px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;margin-left:auto}
+
+.sentence-reader{display:flex;flex-direction:column;align-items:center;padding:8px 0}
+.sr-card{background:var(--surface);border-radius:28px;border:1.5px solid var(--border);padding:28px 32px;max-width:600px;width:100%;box-shadow:var(--sh);margin-bottom:20px;position:relative;overflow:hidden;}
+.sr-card::after{content:'';position:absolute;bottom:-30px;left:-30px;width:110px;height:110px;border-radius:50%;background:var(--read-s);opacity:.6;}
+.sr-scene{font-size:72px;text-align:center;margin-bottom:16px;display:block;animation:sceneFloat 4s ease-in-out infinite}
+@keyframes sceneFloat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.sr-sentence-wrap{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:20px;background:var(--surface2);border-radius:18px;margin-bottom:16px;min-height:72px;align-items:center;border:1.5px solid var(--border);}
+.sr-word{font-family:'Fredoka One',sans-serif;font-size:30px;color:var(--text);cursor:pointer;transition:all .22s;padding:4px 8px;border-radius:10px;position:relative;}
+.sr-word:hover{color:var(--read);background:var(--read-s)}
+.sr-word.lit{color:#fff;background:var(--read);transform:scale(1.12) translateY(-3px);box-shadow:0 6px 18px rgba(124,92,191,.4);}
+.sr-word.read-done{color:var(--success)}
+.sr-phonetic-tip{position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;color:var(--read);background:var(--read-s);padding:2px 7px;border-radius:6px;white-space:nowrap;opacity:0;transition:.2s;pointer-events:none;border:1px solid rgba(124,92,191,.2);}
+.sr-word:hover .sr-phonetic-tip,.sr-word.lit .sr-phonetic-tip{opacity:1}
+.sr-meaning{font-size:13px;font-weight:700;color:var(--muted);text-align:center;line-height:1.6;padding:0 8px;margin-bottom:14px}
+.sr-progress-row{display:flex;gap:6px;justify-content:center;margin-bottom:12px}
+.sr-prog-dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:.3s}
+.sr-prog-dot.done{background:var(--read)}
+.sr-prog-dot.cur{background:var(--read);box-shadow:0 0 0 3px rgba(124,92,191,.25)}
+.sr-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.sr-btn{padding:11px 22px;border-radius:var(--rpill);border:none;font-weight:800;font-size:13px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:7px;}
+.sr-btn:hover{transform:translateY(-1px)}
+.sr-btn:active{transform:scale(.97)}
+.sr-btn.primary{background:linear-gradient(135deg,var(--read),#A78BFA);color:#fff;box-shadow:0 4px 16px rgba(124,92,191,.35)}
+.sr-btn.outline{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
+.sr-btn.outline:hover{background:var(--read-s);color:var(--read);border-color:var(--read)}
+.sr-btn.wbw{background:var(--read-s);color:var(--read);border:1.5px solid rgba(124,92,191,.2)}
+.autoplay-row{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.autoplay-toggle{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--rpill);background:var(--surface2);border:1.5px solid var(--border);cursor:pointer;transition:.15s;font-weight:800;font-size:12px;color:var(--muted);}
+.autoplay-toggle.on{background:var(--read-s);color:var(--read);border-color:var(--read)}
+.tog-track{width:22px;height:12px;border-radius:6px;background:var(--border);position:relative;transition:.2s;flex-shrink:0}
+.tog-track::after{content:'';position:absolute;width:10px;height:10px;border-radius:50%;background:#fff;top:1px;left:1px;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.autoplay-toggle.on .tog-track{background:var(--read)}
+.autoplay-toggle.on .tog-track::after{left:11px}
+.sent-nav{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+.sn-btn{padding:10px 20px;border-radius:var(--rpill);border:1.5px solid var(--border);background:var(--surface);font-weight:800;font-size:13px;cursor:pointer;color:var(--muted);transition:.15s;}
+.sn-btn:hover{border-color:var(--read);color:var(--read);background:var(--read-s)}
+.sn-counter{font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--muted)}
+.ra-mic-row{display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.ra-mic-btn{width:50px;height:50px;border-radius:50%;background:var(--read);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(124,92,191,.4);transition:.2s;}
+.ra-mic-btn:hover{transform:scale(1.08)}
+.ra-mic-btn.listening{background:#FF6B6B;animation:micPulse .75s ease-in-out infinite}
+.ra-mic-btn svg{width:20px;height:20px;fill:#fff}
+.ra-score{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--rpill);background:var(--surface2);border:1.5px solid var(--border);font-weight:800;font-size:13px;color:var(--muted);}
+.ra-score.great{background:var(--success-s);border-color:var(--success);color:var(--success)}
+.ra-score.ok{background:var(--pron-s);border-color:var(--pron);color:var(--pron-d)}
+.ra-score.miss{background:var(--lang-s);border-color:var(--lang);color:var(--lang-d)}
+</style>
+</head>
+<body>
+
+<!-- ═══ SUCCESS OVERLAY ═══ -->
+<div class="success-overlay" id="sOverlay">
+  <div class="success-burst" id="sBurst">
+    <div class="burst-wrap">
+      <div class="b-ring" style="width:110px;height:110px;top:0;left:0;background:rgba(82,201,122,.15);animation-delay:.05s"></div>
+      <div class="b-ring" style="width:80px;height:80px;top:15px;left:15px;background:rgba(82,201,122,.25);animation-delay:.18s"></div>
+      <div class="b-star">⭐</div>
+    </div>
+    <div class="success-label" id="sLabel">Well done!</div>
+  </div>
+</div>
+
+<div class="app-shell">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+      <div class="brand-row">
+        <div class="brand-logo">
+          <svg width="26" height="28" viewBox="0 0 26 28" fill="none">
+            <rect x="3" y="23" width="20" height="3" rx="1.5" fill="#5DCAA5"/>
+            <path d="M13 22 C13 17 13 12 13 7" stroke="#9FE1CB" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M13 16 C13 16 7 12 4 14 C4 14 7 20 13 17" fill="#5DCAA5"/>
+            <path d="M13 12 C13 12 19 8 22 10 C22 10 19 16 13 13" fill="#97C459"/>
+            <ellipse cx="13" cy="6" rx="5" ry="6" fill="#9FE1CB"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-name">Sprout</div>
+          <div class="brand-sub">little minds, big growth</div>
+        </div>
+      </div>
+
+      <div class="nav-section-label">Modules</div>
+
+      <button class="nav-item active s-lang" id="nav-home" onclick="navigate('home',this)">
+        <span class="nav-icon">🏠</span><span class="nav-label-text">Dashboard</span>
+      </button>
+      <button class="nav-item s-lang" id="nav-language" onclick="navigate('language',this)">
+        <span class="nav-icon">📚</span><span class="nav-label-text">Language</span>
+        <span class="nav-badge">30</span>
+      </button>
+      <button class="nav-item s-math" id="nav-maths" onclick="navigate('maths',this)">
+        <span class="nav-icon">🔢</span><span class="nav-label-text">Maths</span>
+        <span class="nav-badge math">30</span>
+      </button>
+      <button class="nav-item s-pron" id="nav-pronunciation" onclick="navigate('pronunciation',this)">
+        <span class="nav-icon">🎙️</span><span class="nav-label-text">Pronunciation</span>
+        <span class="nav-badge pron">10</span>
+      </button>
+      <button class="nav-item s-read" id="nav-readalong" onclick="navigate('readalong',this)">
+        <span class="nav-icon">📖</span><span class="nav-label-text">Read Along</span>
+        <span class="nav-badge read">New</span>
+      </button>
+      <button class="nav-item s-prog" id="nav-progress" onclick="navigate('progress',this)">
+        <span class="nav-icon">📊</span><span class="nav-label-text">My Progress</span>
+        <span class="nav-badge prog">6</span>
+      </button>
+
+      <div class="sidebar-footer">
+        <span class="age-label">Age Group Filter</span>
+        <select class="age-select" id="age-select" onchange="setAgeFilter(this.value)">
+          <option value="all">All Ages (2–8)</option>
+          <option value="2-4">Ages 2–4</option>
+          <option value="5-6">Ages 5–6</option>
+          <option value="7-8">Ages 7–8</option>
+        </select>
+        <button class="sidebar-toggle" onclick="toggleSidebar()">
+          <span>◀</span><span class="sidebar-toggle-text">Collapse</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <div class="main">
+    <!-- Header -->
+    <div class="top-header">
+      <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+      <div class="progress-section">
+        <div class="prog-meta">
+          <span class="prog-title" id="prog-title">Overall Progress</span>
+          <span class="prog-pct" id="prog-pct">38%</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill lang" id="prog-fill" style="width:38%"></div></div>
+        <div class="prog-dots" id="prog-dots"></div>
+      </div>
+      <div class="streak-widget">
+        <div class="streak-flame">🔥</div>
+        <div><div class="streak-count" id="streak-num">7</div><div class="streak-label">Day streak</div></div>
+      </div>
+      <div class="xp-widget">
+        <div class="xp-star">⭐</div>
+        <div><div class="xp-val" id="xp-total">480</div><div class="xp-label">Total XP</div></div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content" id="main-content"></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   SPROUT — UNIFIED APP JS
+   All 6 modules in one shell
+════════════════════════════════════════ */
+
+// ── GLOBAL STATE ──────────────────────
+const ST = {
+  section: 'home',
+  ageFilter: 'all',
+  streak: 7,
+  xp: 480,
+  progress: { language: 42, maths: 28, pronunciation: 61 },
+  completed: new Set(['L01','L02','L03','L08','L09','M01','M02','M03','M04','M05','P01','P02']),
+  // Module 2 state
+  literacy: { level: 1, letterIdx: 0, spellWordIdx: 0, sentIdx: 0, spellState: [], dropped: [] },
+  // Module 3 state
+  pron: { wordIdx: 0, listening: false, volTimer: null },
+  // Module 4 state
+  math: { mode: 'count', countN: 5, clicked: new Set(), arithIdx: 0, solved: false },
+  modal: null,
+};
+
+// ── CURRICULUM ────────────────────────
+const LANG = [
+  {id:"L01",type:"letter",content:"A",audio_prompt:"A as in Apple",hint:"Think of a red apple",emoji:"🍎",ageGroup:"2-4"},
+  {id:"L02",type:"letter",content:"B",audio_prompt:"B as in Ball",hint:"Round like a ball",emoji:"⚽",ageGroup:"2-4"},
+  {id:"L03",type:"letter",content:"C",audio_prompt:"C as in Cat",hint:"Curved like a cat's tail",emoji:"🐱",ageGroup:"2-4"},
+  {id:"L04",type:"letter",content:"D",audio_prompt:"D as in Dog",hint:"A dog with a big belly",emoji:"🐶",ageGroup:"2-4"},
+  {id:"L05",type:"letter",content:"E",audio_prompt:"E as in Egg",hint:"An egg on a shelf",emoji:"🥚",ageGroup:"2-4"},
+  {id:"L06",type:"letter",content:"F",audio_prompt:"F as in Fish",hint:"Like a fish fin",emoji:"🐟",ageGroup:"2-4"},
+  {id:"L07",type:"letter",content:"G",audio_prompt:"G as in Grapes",hint:"A grape on a vine",emoji:"🍇",ageGroup:"2-4"},
+  {id:"L08",type:"word",content:"Cat",audio_prompt:"C-A-T! Cat!",hint:"A fluffy pet that meows",emoji:"🐱",ageGroup:"2-4"},
+  {id:"L09",type:"word",content:"Dog",audio_prompt:"D-O-G! Dog!",hint:"Wags its tail",emoji:"🐶",ageGroup:"2-4"},
+  {id:"L10",type:"word",content:"Sun",audio_prompt:"S-U-N! Sun!",hint:"Shines in the sky",emoji:"☀️",ageGroup:"2-4"},
+  {id:"L11",type:"word",content:"Hat",audio_prompt:"H-A-T! Hat!",hint:"Worn on your head",emoji:"🎩",ageGroup:"5-6"},
+  {id:"L12",type:"word",content:"Tree",audio_prompt:"T-R-E-E! Tree!",hint:"Has leaves and roots",emoji:"🌳",ageGroup:"5-6"},
+  {id:"L13",type:"word",content:"Frog",audio_prompt:"F-R-O-G! Frog!",hint:"Jumps and says ribbit",emoji:"🐸",ageGroup:"5-6"},
+  {id:"L14",type:"word",content:"Rain",audio_prompt:"R-A-I-N! Rain!",hint:"Falls from clouds",emoji:"🌧️",ageGroup:"5-6"},
+  {id:"L15",type:"word",content:"Boat",audio_prompt:"B-O-A-T! Boat!",hint:"Floats on water",emoji:"⛵",ageGroup:"5-6"},
+  {id:"L16",type:"word",content:"Bird",audio_prompt:"B-I-R-D! Bird!",hint:"Has feathers and flies",emoji:"🐦",ageGroup:"5-6"},
+  {id:"L17",type:"word",content:"Moon",audio_prompt:"M-O-O-N! Moon!",hint:"Glows at night",emoji:"🌙",ageGroup:"5-6"},
+  {id:"L18",type:"word",content:"Star",audio_prompt:"S-T-A-R! Star!",hint:"Twinkles at night",emoji:"⭐",ageGroup:"5-6"},
+  {id:"L19",type:"sentence",content:"The cat sat.",audio_prompt:"The cat sat.",hint:"Where did the cat sit?",emoji:"📖",ageGroup:"5-6"},
+  {id:"L20",type:"sentence",content:"I see a red bird.",audio_prompt:"I see a red bird.",hint:"What colour is the bird?",emoji:"📖",ageGroup:"5-6"},
+  {id:"L21",type:"word",content:"Elephant",audio_prompt:"El-e-phant! Elephant!",hint:"The biggest land animal",emoji:"🐘",ageGroup:"7-8"},
+  {id:"L22",type:"word",content:"Dolphin",audio_prompt:"Dol-phin! Dolphin!",hint:"A smart sea creature",emoji:"🐬",ageGroup:"7-8"},
+  {id:"L23",type:"word",content:"Volcano",audio_prompt:"Vol-ca-no! Volcano!",hint:"A mountain that erupts",emoji:"🌋",ageGroup:"7-8"},
+  {id:"L24",type:"word",content:"Rainbow",audio_prompt:"Rain-bow! Rainbow!",hint:"Colours after rain",emoji:"🌈",ageGroup:"7-8"},
+  {id:"L25",type:"sentence",content:"The big elephant drinks water.",audio_prompt:"The big elephant drinks water.",hint:"What does it drink?",emoji:"📖",ageGroup:"7-8"},
+  {id:"L26",type:"sentence",content:"She found a shiny star.",audio_prompt:"She found a shiny star.",hint:"What did she find?",emoji:"📖",ageGroup:"7-8"},
+  {id:"L27",type:"sentence",content:"Frogs jump over the log.",audio_prompt:"Frogs jump over the log.",hint:"What do frogs jump over?",emoji:"📖",ageGroup:"7-8"},
+  {id:"L28",type:"sentence",content:"The rainbow has seven colours.",audio_prompt:"The rainbow has seven colours.",hint:"How many colours?",emoji:"📖",ageGroup:"7-8"},
+  {id:"L29",type:"sentence",content:"Dolphins swim in the deep ocean.",audio_prompt:"Dolphins swim in the deep ocean.",hint:"Where do dolphins swim?",emoji:"📖",ageGroup:"7-8"},
+  {id:"L30",type:"sentence",content:"We planted seeds in the garden.",audio_prompt:"We planted seeds in the garden.",hint:"What did we plant?",emoji:"📖",ageGroup:"7-8"},
+];
+const MATH = [
+  {id:"M01",operation:"count",values:[1],goal_total:1,content:"1",hint:"One little finger",emoji:"☝️",ageGroup:"2-4"},
+  {id:"M02",operation:"count",values:[2],goal_total:2,content:"2",hint:"Two little eyes",emoji:"👀",ageGroup:"2-4"},
+  {id:"M03",operation:"count",values:[3],goal_total:3,content:"3",hint:"Three little stars",emoji:"⭐",ageGroup:"2-4"},
+  {id:"M04",operation:"count",values:[4],goal_total:4,content:"4",hint:"Four wheels on a car",emoji:"🚗",ageGroup:"2-4"},
+  {id:"M05",operation:"count",values:[5],goal_total:5,content:"5",hint:"Five fingers on one hand",emoji:"✋",ageGroup:"2-4"},
+  {id:"M06",operation:"count",values:[6],goal_total:6,content:"6",hint:"Six legs on an ant",emoji:"🐜",ageGroup:"2-4"},
+  {id:"M07",operation:"count",values:[7],goal_total:7,content:"7",hint:"Seven days in a week",emoji:"📅",ageGroup:"2-4"},
+  {id:"M08",operation:"count",values:[8],goal_total:8,content:"8",hint:"Eight legs on a spider",emoji:"🕷️",ageGroup:"2-4"},
+  {id:"M09",operation:"count",values:[9],goal_total:9,content:"9",hint:"Nine planets — almost!",emoji:"🪐",ageGroup:"2-4"},
+  {id:"M10",operation:"count",values:[10],goal_total:10,content:"10",hint:"Ten toes on both feet",emoji:"🦶",ageGroup:"2-4"},
+  {id:"M11",operation:"add",values:[1,1],goal_total:2,content:"1 + 1",hint:"One apple plus one apple",emoji:"🍎",ageGroup:"5-6"},
+  {id:"M12",operation:"add",values:[2,1],goal_total:3,content:"2 + 1",hint:"Two birds and one more",emoji:"🐦",ageGroup:"5-6"},
+  {id:"M13",operation:"add",values:[2,2],goal_total:4,content:"2 + 2",hint:"Two cats and two cats",emoji:"🐱",ageGroup:"5-6"},
+  {id:"M14",operation:"add",values:[3,2],goal_total:5,content:"3 + 2",hint:"Three plus two stars",emoji:"⭐",ageGroup:"5-6"},
+  {id:"M15",operation:"add",values:[4,1],goal_total:5,content:"4 + 1",hint:"Four balls and one more",emoji:"⚽",ageGroup:"5-6"},
+  {id:"M16",operation:"add",values:[3,3],goal_total:6,content:"3 + 3",hint:"Three pairs of socks",emoji:"🧦",ageGroup:"5-6"},
+  {id:"M17",operation:"add",values:[5,2],goal_total:7,content:"5 + 2",hint:"Five fingers plus two more",emoji:"✋",ageGroup:"5-6"},
+  {id:"M18",operation:"add",values:[4,4],goal_total:8,content:"4 + 4",hint:"Four plus four legs",emoji:"🐘",ageGroup:"5-6"},
+  {id:"M19",operation:"add",values:[5,4],goal_total:9,content:"5 + 4",hint:"Five blue plus four red fish",emoji:"🐟",ageGroup:"5-6"},
+  {id:"M20",operation:"add",values:[6,4],goal_total:10,content:"6 + 4",hint:"Six grapes and four more",emoji:"🍇",ageGroup:"5-6"},
+  {id:"M21",operation:"logic",values:[10,3],goal_total:7,content:"10 − 3",hint:"Ten balloons, pop three!",emoji:"🎈",ageGroup:"7-8"},
+  {id:"M22",operation:"logic",values:[8,2],goal_total:6,content:"8 − 2",hint:"Eight cookies, eat two",emoji:"🍪",ageGroup:"7-8"},
+  {id:"M23",operation:"logic",values:[2,3],goal_total:6,content:"2 × 3",hint:"Two groups of three fish",emoji:"🐠",ageGroup:"7-8"},
+  {id:"M24",operation:"logic",values:[3,4],goal_total:12,content:"3 × 4",hint:"Three rows of four stars",emoji:"⭐",ageGroup:"7-8"},
+  {id:"M25",operation:"logic",values:[4,2],goal_total:2,content:"4 ÷ 2",hint:"Four apples shared by two",emoji:"🍏",ageGroup:"7-8"},
+  {id:"M26",operation:"logic",values:[9,3],goal_total:3,content:"9 ÷ 3",hint:"Nine berries in three bowls",emoji:"🍓",ageGroup:"7-8"},
+  {id:"M27",operation:"add",values:[13,7],goal_total:20,content:"13 + 7",hint:"Thirteen birds plus seven",emoji:"🐦",ageGroup:"7-8"},
+  {id:"M28",operation:"logic",values:[15,6],goal_total:9,content:"15 − 6",hint:"Fifteen shells, give six",emoji:"🐚",ageGroup:"7-8"},
+  {id:"M29",operation:"logic",values:[5,5],goal_total:25,content:"5 × 5",hint:"Five-by-five grid of dots",emoji:"🔵",ageGroup:"7-8"},
+  {id:"M30",operation:"logic",values:[20,4],goal_total:5,content:"20 ÷ 4",hint:"Twenty seeds in four pots",emoji:"🪴",ageGroup:"7-8"},
+];
+const PRON_WORDS = [
+  {id:"P01",word:"Cat",syllables:["Cat"],phonemes:["K","ae","t"],age:"2–4",emoji:"🐱",tips:{"Free":"Touch tongue to the top for a hard C sound"}},
+  {id:"P02",word:"Dog",syllables:["Dog"],phonemes:["D","aw","g"],age:"2–4",emoji:"🐶",tips:{}},
+  {id:"P03",word:"Sun",syllables:["Sun"],phonemes:["S","uh","n"],age:"2–4",emoji:"☀️",tips:{}},
+  {id:"P04",word:"Sh",syllables:["Sh"],phonemes:["ʃ"],age:"2–4",emoji:"🤫",tips:{}},
+  {id:"P05",word:"Ch",syllables:["Ch"],phonemes:["tʃ"],age:"2–4",emoji:"🚂",tips:{}},
+  {id:"P06",word:"Tree",syllables:["Tree"],phonemes:["Tr","ee"],age:"5–6",emoji:"🌳",tips:{"Free":"Your tongue must touch the roof — T sounds different from F!","Tee":"Add the R — say Tr together!"}},
+  {id:"P07",word:"Butterfly",syllables:["But","ter","fly"],phonemes:["B","uh","t","er","fl","ai"],age:"5–6",emoji:"🦋",tips:{"Budderfly":"The middle is 'ter' — crisp!"}},
+  {id:"P08",word:"Strawberry",syllables:["Straw","ber","ry"],phonemes:["Str","or","b","er","ee"],age:"5–6",emoji:"🍓",tips:{"Strawbelly":"The ending is -ry, not -ly!"}},
+  {id:"P09",word:"Dinosaur",syllables:["Di","no","saur"],phonemes:["D","ai","n","oh","s","or"],age:"5–6",emoji:"🦕",tips:{"Dinasore":"Ending is 'saur' — like SOAR!"}},
+  {id:"P10",word:"Elephant",syllables:["El","e","phant"],phonemes:["El","uh","f","ent"],age:"7–8",emoji:"🐘",tips:{"Elefant":"The 'ph' sounds like F!","Elephent":"Last part is 'phant' — fant!"}},
+];
+const SPELL_WORDS = [
+  {word:"CAT",emoji:"🐱",hint:"A fluffy pet"},
+  {word:"DOG",emoji:"🐶",hint:"Man's best friend"},
+  {word:"SUN",emoji:"☀️",hint:"Shines in the sky"},
+  {word:"HAT",emoji:"🎩",hint:"Worn on your head"},
+  {word:"BUS",emoji:"🚌",hint:"Takes you to school"},
+  {word:"FLY",emoji:"🪰",hint:"Wings and buzzes"},
+  {word:"JAM",emoji:"🍓",hint:"Goes on toast"},
+];
+const SENTENCES = [
+  {words:["The","cat","sat"],roles:["subj","verb","obj"],hint:"Subject → Verb → Object"},
+  {words:["Birds","fly","high"],roles:["subj","verb","obj"],hint:"Who does what where?"},
+  {words:["She","eats","cake"],roles:["subj","verb","obj"],hint:"Who · Action · What"},
+  {words:["Dogs","love","bones"],roles:["subj","verb","obj"],hint:"Subject · Verb · Object"},
+  {words:["Frogs","jump","far"],roles:["subj","verb","obj"],hint:"Build the sentence!"},
+];
+const LETTERS = [
+  {letter:"A",word:"Apple",emoji:"🍎"},{letter:"B",word:"Ball",emoji:"⚽"},
+  {letter:"C",word:"Cat",emoji:"🐱"},{letter:"D",word:"Dog",emoji:"🐶"},
+  {letter:"E",word:"Egg",emoji:"🥚"},{letter:"F",word:"Fish",emoji:"🐟"},
+  {letter:"G",word:"Grapes",emoji:"🍇"},{letter:"H",word:"Hat",emoji:"🎩"},
+  {letter:"I",word:"Ice cream",emoji:"🍦"},{letter:"J",word:"Jar",emoji:"🫙"},
+];
+const ARITH = [
+  {op:"+",a:2,b:3,ans:5},{op:"+",a:4,b:2,ans:6},{op:"+",a:1,b:4,ans:5},
+  {op:"+",a:3,b:3,ans:6},{op:"+",a:5,b:2,ans:7},{op:"-",a:7,b:3,ans:4},
+  {op:"-",a:8,b:2,ans:6},{op:"-",a:9,b:4,ans:5},{op:"×",a:2,b:3,ans:6},
+  {op:"×",a:3,b:3,ans:9},{op:"×",a:2,b:4,ans:8},{op:"÷",a:6,b:2,ans:3},
+];
+const NWORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
+
+// ── NAVIGATION ─────────────────────────
+function navigate(sec, btn) {
+  ST.section = sec;
+  ST.modal = null;
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  updateHeader();
+  renderContent();
+}
+
+function setAgeFilter(v) { ST.ageFilter = v; renderContent(); }
+
+function toggleSidebar() {
+  const s = document.getElementById('sidebar');
+  s.classList.toggle('collapsed');
+  const btn = s.querySelector('.sidebar-toggle-text');
+  if(btn) btn.textContent = s.classList.contains('collapsed') ? 'Expand' : 'Collapse';
+}
+
+function toggleMobileMenu() {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+}
+
+// ── HEADER UPDATE ──────────────────────
+function updateHeader() {
+  const sec = ST.section;
+  const col = sec==='language'?'lang':sec==='maths'?'math':sec==='pronunciation'?'pron':'prog';
+  const pct = sec==='language'?ST.progress.language:sec==='maths'?ST.progress.maths:sec==='pronunciation'?ST.progress.pronunciation:Math.round((ST.progress.language+ST.progress.maths+ST.progress.pronunciation)/3);
+  document.getElementById('prog-title').textContent = sec==='home'?'Overall Progress':sec.charAt(0).toUpperCase()+sec.slice(1)+' Progress';
+  document.getElementById('prog-pct').textContent = pct+'%';
+  const fill = document.getElementById('prog-fill');
+  fill.style.width = pct+'%';
+  fill.className = `prog-fill ${col}`;
+  const dots = document.getElementById('prog-dots');
+  dots.innerHTML = Array.from({length:10},(_,i)=>`<div class="prog-dot ${i<Math.floor(pct/10)?'done '+col:''}"></div>`).join('');
+  document.getElementById('streak-num').textContent = ST.streak;
+  document.getElementById('xp-total').textContent = ST.xp;
+}
+
+// ── MAIN RENDER ROUTER ─────────────────
+function renderContent() {
+  const c = document.getElementById('main-content');
+  const sec = ST.section;
+  if(sec==='home') renderHome(c);
+  else if(sec==='language') renderLanguage(c);
+  else if(sec==='maths') renderMaths(c);
+  else if(sec==='pronunciation') renderPronunciation(c);
+  else if(sec==='readalong') renderReadAlong(c);
+  else if(sec==='progress') renderProgress(c);
+}
+
+// ════════════════════════════════════════
+// HOME DASHBOARD
+// ════════════════════════════════════════
+function renderHome(c) {
+  const overall = Math.round((ST.progress.language+ST.progress.maths+ST.progress.pronunciation)/3);
+  c.innerHTML = `
+    <div class="section-label">Welcome back! 👋</div>
+    <div class="big-title">Ready to grow today? 🌱</div>
+    <div class="sub-title">Pick a module to continue your journey</div>
+
+    <div class="analytics-grid" style="margin-bottom:28px">
+      ${[
+        {col:'lang-c',icon:'📚',label:'Language',val:ST.progress.language+'%',delta:'+5% this week',sec:'language'},
+        {col:'math-c',icon:'🔢',label:'Maths',val:ST.progress.maths+'%',delta:'+3% this week',sec:'maths'},
+        {col:'pron-c',icon:'🎙️',label:'Pronunciation',val:ST.progress.pronunciation+'%',delta:'+8% this week',sec:'pronunciation'},
+        {col:'prog-c',icon:'⭐',label:'Total XP',val:ST.xp,delta:'+20 today',sec:'progress'},
+      ].map(s=>`
+        <div class="stat-card ${s.col}" style="cursor:pointer" onclick="navigate('${s.sec}',document.getElementById('nav-${s.sec}'))">
+          <div class="stat-icon">${s.icon}</div>
+          <div class="stat-label">${s.label}</div>
+          <div class="stat-val">${s.val}</div>
+          <div class="stat-delta">↑ ${s.delta}</div>
+          <div class="mini-bar"><div class="mini-fill" style="width:${typeof s.val==='string'?s.val:'48%'}"></div></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="section-label">Quick Start</div>
+    <div class="cards-grid">
+      <div class="card lang" onclick="navigate('language',document.getElementById('nav-language'))">
+        <div class="card-corner"></div>
+        <div class="card-icon">📚</div>
+        <div class="card-type">Language Engine</div>
+        <div class="card-content">A → Z</div>
+        <div class="card-hint">Phonics, spelling & sentences</div>
+        <div class="card-foot">
+          <span class="card-age lang">30 activities</span>
+          <button class="card-play lang" onclick="event.stopPropagation();navigate('language',document.getElementById('nav-language'))">▶</button>
+        </div>
+      </div>
+      <div class="card math" onclick="navigate('maths',document.getElementById('nav-maths'))">
+        <div class="card-corner"></div>
+        <div class="card-icon">🔢</div>
+        <div class="card-type">Maths Module</div>
+        <div class="card-content">1 + 2</div>
+        <div class="card-hint">Counting, adding & logic</div>
+        <div class="card-foot">
+          <span class="card-age math">30 activities</span>
+          <button class="card-play math" onclick="event.stopPropagation();navigate('maths',document.getElementById('nav-maths'))">▶</button>
+        </div>
+      </div>
+      <div class="card pron" onclick="navigate('pronunciation',document.getElementById('nav-pronunciation'))">
+        <div class="card-corner"></div>
+        <div class="card-icon">🎙️</div>
+        <div class="card-type">Voice Coach</div>
+        <div class="card-content">Aa Bb</div>
+        <div class="card-hint">Real-time pronunciation feedback</div>
+        <div class="card-foot">
+          <span class="card-age pron">10 activities</span>
+          <button class="card-play pron" onclick="event.stopPropagation();navigate('pronunciation',document.getElementById('nav-pronunciation'))">▶</button>
+        </div>
+      </div>
+      <div class="card" style="border-color:var(--read);background:var(--read-s)" onclick="navigate('readalong',document.getElementById('nav-readalong'))">
+        <div class="card-corner" style="background:var(--read);opacity:.1"></div>
+        <div class="card-icon" style="background:#E8DFFF">📖</div>
+        <div class="card-type" style="color:var(--read)">Read Along</div>
+        <div class="card-content" style="color:var(--read)">New!</div>
+        <div class="card-hint">Words & sentences for ages 3–6</div>
+        <div class="card-foot">
+          <span class="card-age" style="background:var(--read-s);color:var(--read)">Ages 3–6</span>
+          <button class="card-play" style="background:var(--read);color:#fff" onclick="event.stopPropagation();navigate('readalong',document.getElementById('nav-readalong'))">▶</button>
+        </div>
+      </div>
+      <div class="card" style="border-color:var(--progress-c);background:var(--progress-s)" onclick="navigate('progress',document.getElementById('nav-progress'))">
+        <div class="card-corner" style="background:var(--progress-c);opacity:.1"></div>
+        <div class="card-icon" style="background:#F3EEFF">📊</div>
+        <div class="card-type" style="color:var(--progress-c)">Analytics</div>
+        <div class="card-content" style="color:var(--progress-c)">${overall}%</div>
+        <div class="card-hint">View your full progress report</div>
+        <div class="card-foot">
+          <span class="card-age" style="background:var(--progress-s);color:var(--progress-c)">Module 6</span>
+          <button class="card-play" style="background:var(--progress-c);color:#fff" onclick="event.stopPropagation();navigate('progress',document.getElementById('nav-progress'))">▶</button>
+        </div>
+      </div>
+    </div>
+  `;
+  // animate mini fills
+  setTimeout(()=>document.querySelectorAll('.mini-fill').forEach(f=>f.style.transition='width 1s cubic-bezier(.34,1.56,.64,1)'),100);
+}
+
+// ════════════════════════════════════════
+// MODULE 2 — LANGUAGE (LiteracyFlow)
+// ════════════════════════════════════════
+function renderLanguage(c) {
+  const ls = ST.literacy;
+  const filter = ST.ageFilter;
+  c.innerHTML = `
+    <div class="section-label">Module 2 · LiteracyFlow Engine</div>
+    <div class="big-title">Language Learning 📚</div>
+    <div class="sub-title">Phonics → Spelling → Sentences</div>
+    <div class="lv-bar">
+      <button class="lv-btn ${ls.level===1?'active':''}" onclick="setLiteracyLevel(1)">Level 1 · Phonics</button>
+      <button class="lv-btn ${ls.level===2?'active':''}" onclick="setLiteracyLevel(2)">Level 2 · Spell It</button>
+      <button class="lv-btn ${ls.level===3?'active':''}" onclick="setLiteracyLevel(3)">Level 3 · Scramble</button>
+    </div>
+    <div id="literacy-body"></div>
+  `;
+  renderLiteracyLevel();
+}
+
+function setLiteracyLevel(n) {
+  ST.literacy.level = n;
+  renderContent();
+}
+
+function renderLiteracyLevel() {
+  const lb = document.getElementById('literacy-body');
+  if(!lb) return;
+  const lv = ST.literacy.level;
+  if(lv===1) renderPhonics(lb);
+  else if(lv===2) renderSpell(lb);
+  else renderScramble(lb);
+}
+
+let dragLetter='', dragLetterId=-1;
+let dragWord='', dragWordId=-1;
+
+// Level 1 — Phonics
+function renderPhonics(lb) {
+  const L = LETTERS[ST.literacy.letterIdx];
+  lb.innerHTML = `
+    <div class="phonics-wrap">
+      <div class="pill" style="background:var(--lang-s);color:var(--lang)">🔊 Tap the letter to hear it!</div>
+      <div class="big-letter" id="bltr" onclick="speakLetterNow()" title="Tap me!">${L.letter}</div>
+      <div style="font-family:'Fredoka One',sans-serif;font-size:22px;color:var(--muted)">${L.emoji} ${L.word}</div>
+      <div class="letter-chips">
+        ${LETTERS.map((l,i)=>`<div class="lchip ${i===ST.literacy.letterIdx?'act':''}" onclick="selectLetter(${i})">${l.letter}</div>`).join('')}
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center">
+        <button class="btn btn-outline" onclick="prevLetter()">← Prev</button>
+        <button class="btn" style="background:var(--lang);color:#fff" onclick="speakLetterNow()">🔊 Hear It</button>
+        <button class="btn btn-outline" onclick="nextLetter()">Next →</button>
+      </div>
+      <button class="btn" style="background:var(--success);color:#fff;margin-top:10px" onclick="unlockLevel(2)">I know this! → Level 2</button>
+    </div>
+  `;
+}
+
+function selectLetter(i) { ST.literacy.letterIdx = i; renderLiteracyLevel(); setTimeout(speakLetterNow,300); }
+function prevLetter() { ST.literacy.letterIdx=(ST.literacy.letterIdx-1+LETTERS.length)%LETTERS.length; renderLiteracyLevel(); setTimeout(speakLetterNow,300); }
+function nextLetter() { ST.literacy.letterIdx=(ST.literacy.letterIdx+1)%LETTERS.length; renderLiteracyLevel(); setTimeout(speakLetterNow,300); }
+function speakLetterNow() {
+  const el=document.getElementById('bltr');
+  if(el){el.classList.remove('lclicked');setTimeout(()=>el.classList.add('lclicked'),10);}
+  speak(LETTERS[ST.literacy.letterIdx].word+'. '+LETTERS[ST.literacy.letterIdx].letter+' as in '+LETTERS[ST.literacy.letterIdx].word);
+}
+function unlockLevel(n) {
+  showSuccess(n===2?'Level 2 Unlocked! 🔤':'Level 3 Unlocked! ✍️');
+  setTimeout(()=>{ST.literacy.level=n;renderContent();},1900);
+}
+
+// Level 2 — Spell
+function renderSpell(lb) {
+  const W = SPELL_WORDS[ST.literacy.spellWordIdx];
+  const letters = W.word.split('');
+  const shuffled = [...letters].sort(()=>Math.random()-.5);
+  ST.literacy.spellState = Array(letters.length).fill(null);
+  lb.innerHTML = `
+    <div class="spell-wrap">
+      <div style="font-size:64px">${W.emoji}</div>
+      <div style="font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--muted)">${W.hint}</div>
+      <div class="drop-row" id="droprow">
+        ${letters.map((_,i)=>`
+          <div class="dbox" id="dbox${i}"
+            ondragover="dboxOver(event,${i})" ondrop="dboxDrop(event,${i})" ondragleave="dboxLeave(${i})">
+            <span class="bidx">#${i+1}</span>
+          </div>`).join('')}
+      </div>
+      <div style="font-size:11px;font-weight:800;color:var(--muted2)">↑ Drag letters into the boxes ↑</div>
+      <div class="lbank" id="lbank">
+        ${shuffled.map((l,i)=>`
+          <div class="dltr" id="dltr${i}" draggable="true" ondragstart="lDragStart(event,'${l}',${i})">${l}</div>`).join('')}
+      </div>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;justify-content:center">
+        <button class="btn btn-outline" onclick="resetSpell()">↺ Reset</button>
+        <button class="btn btn-outline" onclick="nextSpellWord()">Next Word →</button>
+      </div>
+      <div id="spell-result"></div>
+    </div>
+  `;
+}
+function lDragStart(e,l,id){dragLetter=l;dragLetterId=id;e.dataTransfer.setData('text/plain',l)}
+function dboxOver(e,i){e.preventDefault();document.getElementById('dbox'+i).classList.add('hover-over')}
+function dboxLeave(i){document.getElementById('dbox'+i).classList.remove('hover-over')}
+function dboxDrop(e,i){
+  e.preventDefault();
+  const box=document.getElementById('dbox'+i);
+  box.classList.remove('hover-over');
+  if(ST.literacy.spellState[i]!==null) return;
+  ST.literacy.spellState[i]=dragLetter;
+  box.textContent=dragLetter;
+  box.classList.add('filled');
+  const src=document.getElementById('dltr'+dragLetterId);
+  if(src)src.classList.add('used');
+  if(ST.literacy.spellState.every(s=>s!==null)) checkSpell();
+}
+function checkSpell(){
+  const W=SPELL_WORDS[ST.literacy.spellWordIdx];
+  if(ST.literacy.spellState.join('')===W.word){
+    awardXP(15);
+    speak(W.word+'! Correct!');
+    showSuccess('You spelled '+W.word+'! ⭐');
+    setTimeout(()=>{ST.literacy.spellWordIdx=(ST.literacy.spellWordIdx+1)%SPELL_WORDS.length;renderContent();},2100);
+  } else {
+    const dr=document.getElementById('droprow');
+    if(dr){dr.classList.add('shake');setTimeout(()=>{dr.classList.remove('shake');resetSpell();},700);}
+  }
+}
+function resetSpell(){renderLiteracyLevel()}
+function nextSpellWord(){ST.literacy.spellWordIdx=(ST.literacy.spellWordIdx+1)%SPELL_WORDS.length;renderLiteracyLevel();}
+
+// Level 3 — Scramble
+function renderScramble(lb) {
+  const S = SENTENCES[ST.literacy.sentIdx];
+  ST.literacy.dropped = [];
+  const shuffled = [...S.words].sort(()=>Math.random()-.5);
+  lb.innerHTML = `
+    <div class="scramble-wrap">
+      <div class="pill" style="background:var(--lang-s);color:var(--lang)">${S.hint}</div>
+      <div style="font-size:12px;font-weight:700;color:var(--muted)">Drag word blocks into the correct order</div>
+      <div style="display:flex;gap:8px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;margin-top:4px">
+        <span style="color:var(--lang)">● Subject</span>
+        <span style="color:var(--math)">● Verb</span>
+        <span style="color:var(--pron-d)">● Object</span>
+      </div>
+      <div class="sent-drop" id="sentdrop"
+        ondragover="sOver(event)" ondrop="sDrop(event)" ondragleave="sLeave()">
+        <span id="sph" style="color:var(--muted2);font-size:13px;font-weight:800">Drop words here in order...</span>
+      </div>
+      <div class="wpool" id="wpool">
+        ${shuffled.map((w,i)=>{
+          const oi=S.words.indexOf(w);
+          const cls=oi===0?'subj':oi===1?'verb':'obj';
+          return `<div class="wblock ${cls}" id="wb${i}" draggable="true" ondragstart="wDragStart(event,'${w}',${i})">${w}</div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+        <button class="btn btn-outline" onclick="resetScramble()">↺ Reset</button>
+        <button class="btn btn-outline" onclick="nextSentence()">Next →</button>
+        <button class="btn" style="background:var(--lang);color:#fff" onclick="checkScramble()">✓ Check</button>
+      </div>
+      <div id="scr-result"></div>
+    </div>
+  `;
+}
+function wDragStart(e,w,i){dragWord=w;dragWordId=i;e.dataTransfer.setData('text/plain',w)}
+function sOver(e){e.preventDefault();document.getElementById('sentdrop').classList.add('hover-over')}
+function sLeave(){document.getElementById('sentdrop').classList.remove('hover-over')}
+function sDrop(e){
+  e.preventDefault();
+  const d=document.getElementById('sentdrop');
+  d.classList.remove('hover-over');
+  ST.literacy.dropped.push(dragWord);
+  const ph=document.getElementById('sph');if(ph)ph.remove();
+  const S=SENTENCES[ST.literacy.sentIdx];
+  const oi=S.words.indexOf(dragWord);
+  const cls=oi===0?'subj':oi===1?'verb':'obj';
+  const bl=document.createElement('div');bl.className=`wblock ${cls}`;bl.textContent=dragWord;
+  d.appendChild(bl);
+  const src=document.getElementById('wb'+dragWordId);if(src)src.classList.add('placed');
+}
+function checkScramble(){
+  const S=SENTENCES[ST.literacy.sentIdx];
+  if(ST.literacy.dropped.join(' ')===S.words.join(' ')){
+    awardXP(20);speak(S.words.join(' ')+'. Correct!');
+    showSuccess('Perfect sentence! 📖');
+    setTimeout(()=>{ST.literacy.sentIdx=(ST.literacy.sentIdx+1)%SENTENCES.length;renderContent();},2100);
+  } else {
+    const d=document.getElementById('sentdrop');
+    if(d){d.classList.add('shake');setTimeout(()=>{d.classList.remove('shake');resetScramble();},700);}
+  }
+}
+function resetScramble(){ST.literacy.dropped=[];renderLiteracyLevel()}
+function nextSentence(){ST.literacy.sentIdx=(ST.literacy.sentIdx+1)%SENTENCES.length;renderLiteracyLevel()}
+
+// ════════════════════════════════════════
+// MODULE 3 — PRONUNCIATION COACH
+// ════════════════════════════════════════
+let pronRecog=null;
+
+function renderPronunciation(c) {
+  const ps = ST.pron;
+  const W = PRON_WORDS[ps.wordIdx];
+  c.innerHTML = `
+    <div class="section-label">Module 3 · Voice Agent</div>
+    <div class="big-title">Pronunciation Coach 🎙️</div>
+    <div class="sub-title">Tap the mic · say the word · get instant feedback</div>
+    <div class="word-picker" id="wpicker">
+      ${PRON_WORDS.map((w,i)=>`<button class="wp-btn ${i===ps.wordIdx?'active':''}" onclick="selectPronWord(${i})">${w.emoji} ${w.word}</button>`).join('')}
+    </div>
+    <div class="pron-grid">
+      <div class="pron-card">
+        <div class="section-label">Target Word</div>
+        <div class="word-big" id="pwdisplay">
+          ${W.syllables.map((s,i)=>`<span class="syl-span" id="syl${i}">${s}</span>${i<W.syllables.length-1?'<span style="color:var(--border)"> · </span>':''}`).join('')}
+        </div>
+        <div class="phoneme-row">
+          ${W.phonemes.map(p=>`<div class="ph-chip">${p}</div>`).join('')}
+        </div>
+        <div class="pill" style="background:var(--pron-s);color:var(--pron-d);margin-bottom:14px">Ages ${W.age}</div>
+        <div class="fb-box" id="fbbox"></div>
+      </div>
+      <div class="pron-card" style="display:flex;flex-direction:column;align-items:center">
+        <div class="section-label" style="text-align:center">Microphone</div>
+        <div class="mic-area">
+          <div class="mic-ring-wrap" id="micwrap" onclick="toggleMic()">
+            <div class="m-ring r1" id="mr1"></div>
+            <div class="m-ring r2" id="mr2"></div>
+            <div class="m-ring r3" id="mr3"></div>
+            <div class="mic-core" id="mccore">
+              <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1 1.93c-3.94-.49-7-3.85-7-7.93h2c0 3.31 2.69 6 6 6s6-2.69 6-6h2c0 4.08-3.06 7.44-7 7.93V19h3v2H9v-2h3v-2.07z"/></svg>
+            </div>
+          </div>
+          <div class="vol-strip" id="volstrip">
+            ${Array.from({length:7},(_,i)=>`<div class="vbar" id="vb${i}" style="height:${6+i*3}px"></div>`).join('')}
+          </div>
+          <div class="mic-txt" id="mictxt">Tap to start listening</div>
+        </div>
+        <button class="btn" style="background:var(--pron);color:#000;margin-bottom:10px" onclick="toggleMic()">🎙️ Start / Stop</button>
+        <button class="btn btn-outline" onclick="simPron()">🎲 Simulate Response</button>
+        <p style="font-size:10px;color:var(--muted2);text-align:center;margin-top:8px;max-width:180px;font-weight:700;line-height:1.5">Requires microphone permission in your browser</p>
+      </div>
+    </div>
+  `;
+}
+
+function selectPronWord(i){ ST.pron.wordIdx=i; ST.pron.listening=false; clearInterval(ST.pron.volTimer); renderContent(); }
+
+function toggleMic(){
+  if(ST.pron.listening) stopMic();
+  else startMic();
+}
+
+function startMic(){
+  ST.pron.listening=true;
+  const W=PRON_WORDS[ST.pron.wordIdx];
+  setMicUI('listening');
+  // Syllable highlight animation
+  W.syllables.forEach((_,i)=>{
+    setTimeout(()=>{
+      document.querySelectorAll('.syl-span').forEach(s=>s.classList.remove('lit'));
+      const s=document.getElementById('syl'+i);if(s)s.classList.add('lit');
+    },i*450);
+  });
+  // Vol animation
+  ST.pron.volTimer=setInterval(()=>{
+    for(let i=0;i<7;i++){const b=document.getElementById('vb'+i);if(b){b.style.height=Math.floor(8+Math.random()*30)+'px';b.classList.add('on');}}
+  },90);
+  // Try Web Speech API
+  if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    pronRecog=new SR();
+    pronRecog.lang='en-US';pronRecog.interimResults=false;pronRecog.maxAlternatives=3;
+    pronRecog.onresult=e=>{const t=e.results[0][0].transcript.trim();stopMic();processPron(t);};
+    pronRecog.onerror=()=>stopMic();
+    pronRecog.onend=()=>{if(ST.pron.listening)stopMic();};
+    try{pronRecog.start();}catch(err){}
+  } else {
+    setTimeout(()=>{if(ST.pron.listening){stopMic();showFB('no-api','');}},3500);
+  }
+}
+
+function stopMic(){
+  ST.pron.listening=false;
+  if(pronRecog)try{pronRecog.stop();}catch(e){}
+  clearInterval(ST.pron.volTimer);
+  setMicUI('idle');
+  document.querySelectorAll('.syl-span').forEach(s=>s.classList.remove('lit'));
+  for(let i=0;i<7;i++){const b=document.getElementById('vb'+i);if(b){b.style.height=(6+i*3)+'px';b.classList.remove('on');}}
+}
+
+function setMicUI(mode){
+  const core=document.getElementById('mccore');
+  const txt=document.getElementById('mictxt');
+  const W=PRON_WORDS[ST.pron.wordIdx];
+  if(!core||!txt) return;
+  ['list','ok'].forEach(c=>core.classList.remove(c));
+  txt.className='mic-txt';
+  ['mr1','mr2','mr3'].forEach(id=>{const r=document.getElementById(id);if(r)r.classList.remove('rp');});
+  if(mode==='listening'){
+    core.classList.add('list');
+    txt.classList.add('list');txt.textContent='Listening... say "'+W.word+'"';
+    ['mr1','mr2','mr3'].forEach(id=>{const r=document.getElementById(id);if(r)r.classList.add('rp');});
+  } else if(mode==='ok'){
+    core.classList.add('ok');txt.classList.add('ok');txt.textContent='Great job!';
+  } else {
+    txt.textContent='Tap to start listening';
+  }
+}
+
+function processPron(t){
+  const W=PRON_WORDS[ST.pron.wordIdx];
+  const heard=t.toLowerCase().replace(/[^a-z]/g,'');
+  const target=W.word.toLowerCase();
+  if(heard===target||heard.includes(target)||target.includes(heard)){
+    showFB('perfect',t);setMicUI('ok');awardXP(25);
+  } else {
+    const tk=Object.keys(W.tips).find(k=>k.toLowerCase()===t.toLowerCase());
+    const tip=tk?W.tips[tk]:`Try again! You said "${t}" — say "${W.word}"`;
+    showFB(similarity(heard,target)>0.5?'close':'miss',t,tip);
+  }
+}
+
+function similarity(a,b){let m=0;for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]===b[i])m++;return m/Math.max(a.length,b.length)}
+
+function showFB(status,transcript,tip=''){
+  const fb=document.getElementById('fbbox');if(!fb)return;
+  fb.style.display='block';
+  const cfg={
+    'perfect':{cls:'perfect',icon:'🌟',title:'Perfect!',tip:`You said "${transcript}" — that's exactly right!`},
+    'close':{cls:'close',icon:'😊',title:'So close!',tip:tip||`You said "${transcript}" — almost there!`},
+    'miss':{cls:'miss',icon:'💪',title:'Keep trying!',tip:tip||`You said "${transcript}" — keep practising!`},
+    'no-api':{cls:'miss',icon:'🌐',title:'Browser permission needed',tip:'Please allow microphone access, or tap Simulate.'},
+  };
+  const c2=cfg[status]||cfg['miss'];
+  fb.className=`fb-box ${c2.cls}`;
+  fb.innerHTML=`<div class="fb-icon">${c2.icon}</div><div class="fb-title">${c2.title}</div><div class="fb-tip">${c2.tip}</div>`;
+}
+
+function simPron(){
+  const W=PRON_WORDS[ST.pron.wordIdx];
+  const picks=['perfect','close','miss'];
+  const p=picks[Math.floor(Math.random()*picks.length)];
+  const said=p==='perfect'?W.word:p==='close'?W.word.slice(0,-1)+'e':'Fr'+W.word.slice(1);
+  const tk=Object.keys(W.tips)[0];
+  showFB(p,said,tk?W.tips[tk]:'Try saying it more slowly!');
+  if(p==='perfect'){setMicUI('ok');awardXP(25);}
+}
+
+// ════════════════════════════════════════
+// MODULE 4 — MINIMALIST MATH
+// ════════════════════════════════════════
+function renderMaths(c) {
+  const ms = ST.math;
+  c.innerHTML = `
+    <div class="section-label">Module 4 · MinimalMath</div>
+    <div class="big-title">Maths 🔢</div>
+    <div class="sub-title">Visual counting & arithmetic on a number line</div>
+    <div class="math-mode-tabs">
+      <button class="mmt ${ms.mode==='count'?'active':''}" onclick="setMathMode('count')">🔵 Counting (Ages 2–4)</button>
+      <button class="mmt ${ms.mode==='arith'?'active':''}" onclick="setMathMode('arith')">➕ Arithmetic (Ages 5–8)</button>
+    </div>
+    <div id="math-body"></div>
+  `;
+  renderMathBody();
+}
+
+function setMathMode(m){ ST.math.mode=m; ST.math.clicked=new Set(); ST.math.solved=false; renderContent(); }
+
+function renderMathBody(){
+  const mb=document.getElementById('math-body');
+  if(!mb)return;
+  if(ST.math.mode==='count') renderCounting(mb);
+  else renderArithmetic(mb);
+}
+
+function renderCounting(mb){
+  const n=ST.math.countN;
+  const emojis=['🔵','⭐','🍎','🐟','🐱','🌸','🍪','🦋','🐬','🌈'];
+  const em=emojis[n%emojis.length];
+  mb.innerHTML = `
+    <div class="counting-stage">
+      <div class="pill" style="background:var(--math-s);color:var(--math)">Click each ${em} to count!</div>
+      <div class="cnt-word" id="cword">Let's count!</div>
+      <div class="cnt-num" id="cnum">0</div>
+      <div class="circles-area" id="circ">
+        ${Array.from({length:n},(_,i)=>`
+          <div class="cc ${ST.math.clicked.has(i)?'hit':''}" id="cc${i}" onclick="clickCircle(${i})">
+            <span style="${ST.math.clicked.has(i)?'':'opacity:.25'}">${em}</span>
+          </div>`).join('')}
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap;justify-content:center">
+        <button class="btn btn-outline" onclick="changeN(-1)">− Fewer</button>
+        <span style="font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--muted)">Count to ${n}</span>
+        <button class="btn btn-outline" onclick="changeN(1)">+ More</button>
+      </div>
+      <button class="btn" style="background:var(--math);color:#fff;margin-top:6px" onclick="newCountChallenge()">🎲 New Challenge</button>
+    </div>
+  `;
+  const cnum=document.getElementById('cnum');
+  if(cnum) cnum.textContent=ST.math.clicked.size||0;
+  const cword=document.getElementById('cword');
+  if(cword) cword.textContent=ST.math.clicked.size>0?(NWORDS[ST.math.clicked.size]||ST.math.clicked.size):'Let\'s count!';
+}
+
+function changeN(d){ ST.math.countN=Math.min(12,Math.max(1,ST.math.countN+d)); ST.math.clicked=new Set(); renderMathBody(); }
+function newCountChallenge(){ ST.math.countN=Math.floor(Math.random()*9)+2; ST.math.clicked=new Set(); renderMathBody(); }
+
+function clickCircle(i){
+  if(ST.math.clicked.has(i)) return;
+  ST.math.clicked.add(i);
+  const cc=document.getElementById('cc'+i);
+  if(cc){cc.classList.add('hit');cc.innerHTML=`<span>✓</span>`;}
+  const n=ST.math.clicked.size;
+  const cnum=document.getElementById('cnum');
+  if(cnum){cnum.textContent=n;cnum.classList.remove('np');setTimeout(()=>cnum.classList.add('np'),10);}
+  const cword=document.getElementById('cword');
+  if(cword) cword.textContent=NWORDS[n]||n;
+  speak(String(n));
+  if(n===ST.math.countN){
+    awardXP(10);
+    setTimeout(()=>{showSuccess(`You counted to ${n}! 🌟`);setTimeout(()=>newCountChallenge(),2000);},350);
+  }
+}
+
+let arithSolved=false;
+function renderArithmetic(mb){
+  const S=ARITH[ST.math.arithIdx];
+  const maxV=Math.max(S.ans,S.a+S.b,15);
+  arithSolved=false;
+  mb.innerHTML=`
+    <div class="arith-stage">
+      <div class="pill" style="background:var(--math-s);color:var(--math)">Drag the slider to the answer!</div>
+      <div class="eq-row">
+        <div class="eq-n">${S.a}</div>
+        <div class="eq-op">${S.op}</div>
+        <div class="eq-n">${S.b}</div>
+        <div class="eq-eq">=</div>
+        <div class="eq-box" id="eqbox">?</div>
+      </div>
+      <div class="nl-wrap">
+        <div class="nl-track" id="nltrack">
+          <div class="nl-fill" id="nlfill" style="width:0%"></div>
+          <input type="range" class="nl-slider" id="nlslider" min="0" max="${maxV}" value="0" step="1"
+            oninput="sliderMove(this.value,${S.ans},${maxV})"
+            onchange="sliderCheck(this.value,${S.ans})"/>
+        </div>
+        <div class="nl-ticks">
+          ${Array.from({length:Math.min(maxV+1,16)},(_,i)=>`
+            <div class="tick">
+              <div class="tick-ln"></div>
+              <div class="tick-lb ${i===S.ans?'hl':''}">${i}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="slider-answer" id="sanswer"></div>
+      <div class="numline-hint" style="font-size:11px;font-weight:700;color:var(--muted);text-align:center;max-width:320px">
+        Slide right to find the answer · no wrong buzzers here!
+      </div>
+      <div class="ok-banner" id="okbanner">🎉 ${S.ans} is correct! ${S.a} ${S.op} ${S.b} = ${S.ans}</div>
+      <div style="margin-top:10px">
+        <div style="font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;text-align:center">Quick Pick</div>
+        <div class="arith-quick">
+          ${ARITH.map((s,i)=>`<button class="aq ${i===ST.math.arithIdx?'cur':''}" onclick="loadArith(${i})">${s.a} ${s.op} ${s.b}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function sliderMove(v,ans,max){
+  v=parseInt(v);
+  document.getElementById('nlfill').style.width=(v/max*100)+'%';
+  const sa=document.getElementById('sanswer');if(sa)sa.textContent=v>0?(NWORDS[v]||v):'';
+  const eb=document.getElementById('eqbox');if(eb){eb.textContent=v>0?v:'?';eb.className=v>0?'eq-box fill':'eq-box';}
+}
+
+function sliderCheck(v,ans){
+  v=parseInt(v);
+  if(v===ans&&!arithSolved){
+    arithSolved=true;
+    const banner=document.getElementById('okbanner');if(banner)banner.classList.add('show');
+    speak(`${ans}! Correct! Well done!`);
+    awardXP(20);
+    setTimeout(()=>{
+      showSuccess(`${ans} is right! ⭐`);
+      setTimeout(()=>{ST.math.arithIdx=(ST.math.arithIdx+1)%ARITH.length;renderContent();},2000);
+    },500);
+  } else if(v!==ans&&v>0&&!arithSolved){
+    const sl=document.getElementById('nlslider');
+    if(sl){sl.classList.add('shake');setTimeout(()=>sl.classList.remove('shake'),400);}
+  }
+}
+
+function loadArith(i){ ST.math.arithIdx=i; arithSolved=false; renderContent(); }
+
+// ════════════════════════════════════════
+// MODULE 6 — PROGRESS & ANALYTICS
+// ════════════════════════════════════════
+const WEEKLY_DATA = {
+  lang:  [12,25,30,38,40,42,42],
+  math:  [5,10,15,18,22,25,28],
+  pron:  [20,30,40,50,55,58,61],
+};
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const ACTIVITY_FEED = [
+  {type:'lang',icon:'📚',title:'Spelled "BUTTERFLY"',sub:'Level 2 · Spell It',xp:'+15 XP',time:'2 min ago'},
+  {type:'math',icon:'🔢',title:'Solved 3 + 2 = 5',sub:'Arithmetic · Number Line',xp:'+20 XP',time:'8 min ago'},
+  {type:'pron',icon:'🎙️',title:'Pronounced "Elephant"',sub:'Pronunciation Coach',xp:'+25 XP',time:'15 min ago'},
+  {type:'lang',icon:'📚',title:'Learned letter "G"',sub:'Level 1 · Phonics',xp:'+10 XP',time:'32 min ago'},
+  {type:'math',icon:'🔢',title:'Counted to 8',sub:'Counting · Ages 2–4',xp:'+10 XP',time:'1 hr ago'},
+  {type:'pron',icon:'🎙️',title:'Mastered "Tree" sound',sub:'Pronunciation Coach',xp:'+25 XP',time:'2 hr ago'},
+];
+const BADGES = [
+  {icon:'🌟',name:'First Steps',desc:'Complete first activity',earned:true},
+  {icon:'🔤',name:'Alphabet Hero',desc:'Learn all 10 letters',earned:true},
+  {icon:'📖',name:'Word Wizard',desc:'Spell 5 words correctly',earned:true},
+  {icon:'🎙️',name:'Voice Star',desc:'Perfect pronunciation ×3',earned:false},
+  {icon:'🔢',name:'Count Master',desc:'Count to 10 perfectly',earned:true},
+  {icon:'➕',name:'Math Whiz',desc:'Solve 10 arithmetic problems',earned:false},
+  {icon:'🔥',name:'7-Day Streak',desc:'Learn 7 days in a row',earned:true},
+  {icon:'🏆',name:'All-Rounder',desc:'Complete all 3 modules',earned:false},
+];
+// Calendar: last 28 days
+const CAL_DATA = Array.from({length:28},(_,i)=>{
+  if(i>22) return 'today';
+  const r=Math.random();
+  if(r<0.25) return '';
+  return r<0.5?'done-lang':r<0.7?'done-math':r<0.85?'done-pron':'done';
+});
+
+function renderProgress(c) {
+  const overall=Math.round((ST.progress.language+ST.progress.maths+ST.progress.pronunciation)/3);
+  c.innerHTML = `
+    <div class="section-label">Module 6 · Analytics Dashboard</div>
+    <div class="big-title">My Sprout Journey 📊</div>
+    <div class="sub-title">Track your learning journey across all modules</div>
+
+    <!-- Stat cards -->
+    <div class="analytics-grid">
+      <div class="stat-card lang-c">
+        <div class="stat-icon">📚</div>
+        <div class="stat-label">Language</div>
+        <div class="stat-val">${ST.progress.language}%</div>
+        <div class="stat-delta">↑ +5% this week</div>
+        <div class="mini-bar"><div class="mini-fill" style="width:${ST.progress.language}%"></div></div>
+      </div>
+      <div class="stat-card math-c">
+        <div class="stat-icon">🔢</div>
+        <div class="stat-label">Maths</div>
+        <div class="stat-val">${ST.progress.maths}%</div>
+        <div class="stat-delta">↑ +3% this week</div>
+        <div class="mini-bar"><div class="mini-fill" style="width:${ST.progress.maths}%"></div></div>
+      </div>
+      <div class="stat-card pron-c">
+        <div class="stat-icon">🎙️</div>
+        <div class="stat-label">Pronunciation</div>
+        <div class="stat-val">${ST.progress.pronunciation}%</div>
+        <div class="stat-delta">↑ +8% this week</div>
+        <div class="mini-bar"><div class="mini-fill" style="width:${ST.progress.pronunciation}%"></div></div>
+      </div>
+      <div class="stat-card prog-c">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-label">Total XP</div>
+        <div class="stat-val">${ST.xp}</div>
+        <div class="stat-delta">↑ +20 today</div>
+        <div class="mini-bar"><div class="mini-fill" style="width:${Math.min(100,ST.xp/10)}%"></div></div>
+      </div>
+    </div>
+
+    <!-- Level rings -->
+    <div class="section-label">Level Overview</div>
+    <div class="level-section">
+      ${[
+        {label:'Language',col:'#FF6B6B',pct:ST.progress.language,lv:'Intermediate',next:'10 activities to Expert'},
+        {label:'Maths',col:'#4ECDC4',pct:ST.progress.maths,lv:'Beginner',next:'22 activities to Intermediate'},
+        {label:'Pronunciation',col:'#5DCAA5',pct:ST.progress.pronunciation,lv:'Advanced',next:'3 activities to Master'},
+      ].map(item=>{
+        const circ=2*Math.PI*28;
+        const off=circ-(circ*item.pct/100);
+        return `
+          <div class="level-card">
+            <div class="ring-wrap">
+              <svg class="ring-svg" width="72" height="72" viewBox="0 0 72 72">
+                <circle class="ring-track" cx="36" cy="36" r="28"/>
+                <circle class="ring-fill" cx="36" cy="36" r="28"
+                  stroke="${item.col}"
+                  stroke-dasharray="${circ}"
+                  stroke-dashoffset="${off}"
+                  id="ring-${item.label}"/>
+              </svg>
+              <div class="ring-label">
+                <span class="ring-pct" style="color:${item.col}">${item.pct}%</span>
+                <span class="ring-sub">done</span>
+              </div>
+            </div>
+            <div class="level-info">
+              <div class="level-name">${item.label}</div>
+              <div class="level-sub">Level: ${item.lv}</div>
+              <div class="next-milestone">🎯 ${item.next}</div>
+            </div>
+          </div>`;
+      }).join('')}
+    </div>
+
+    <!-- Weekly bar chart -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <div>
+          <div class="section-label">Weekly Progress</div>
+          <div style="font-family:'Fredoka One',sans-serif;font-size:18px">Last 7 Days</div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--lang)"></div>Language</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--math)"></div>Maths</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--pron)"></div>Pronunciation</div>
+        </div>
+      </div>
+      <div class="bar-chart" id="barchart">
+        ${DAYS.map((d,i)=>`
+          <div class="bar-group">
+            <div class="bar-col" style="background:var(--lang);height:${WEEKLY_DATA.lang[i]*1.5}px" title="${WEEKLY_DATA.lang[i]}%">
+              <div class="bar-tip">${WEEKLY_DATA.lang[i]}%</div>
+            </div>
+            <div class="bar-col" style="background:var(--math);height:${WEEKLY_DATA.math[i]*1.5}px" title="${WEEKLY_DATA.math[i]}%">
+              <div class="bar-tip">${WEEKLY_DATA.math[i]}%</div>
+            </div>
+            <div class="bar-col" style="background:var(--pron);height:${WEEKLY_DATA.pron[i]*1.5}px" title="${WEEKLY_DATA.pron[i]}%">
+              <div class="bar-tip">${WEEKLY_DATA.pron[i]}%</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="bar-labels">
+        ${DAYS.map(d=>`<div class="bar-lbl">${d}</div>`).join('')}
+      </div>
+    </div>
+
+    <!-- 2-col grid: Activity + Streak cal -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px" class="two-col">
+      <!-- Activity feed -->
+      <div class="activity-section">
+        <div class="section-label">Recent Activity</div>
+        <div style="font-family:'Fredoka One',sans-serif;font-size:18px;margin-bottom:14px">Today's Sessions</div>
+        <div class="activity-list">
+          ${ACTIVITY_FEED.map(a=>`
+            <div class="activity-item">
+              <div class="act-dot ${a.type}">${a.icon}</div>
+              <div class="act-body">
+                <div class="act-title">${a.title}</div>
+                <div class="act-sub">${a.sub}</div>
+              </div>
+              <div class="act-right">
+                <div class="act-xp">${a.xp}</div>
+                <div class="act-time">${a.time}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <!-- Streak calendar -->
+      <div class="activity-section">
+        <div class="section-label">Streak Calendar</div>
+        <div style="font-family:'Fredoka One',sans-serif;font-size:18px;margin-bottom:4px">🔥 ${ST.streak}-Day Streak!</div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:12px">Last 28 days of learning</div>
+        <div class="streak-cal">
+          ${['M','T','W','T','F','S','S'].map(d=>`<div class="cal-day">${d}</div>`).join('')}
+          ${CAL_DATA.map((cls,i)=>`<div class="cal-cell ${cls==='today'?'done-lang today':cls}"></div>`).join('')}
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          ${[['done-lang','Language'],['done-math','Maths'],['done-pron','Pronunciation'],['done','Multi']].map(([cls,lbl])=>`
+            <div style="display:flex;align-items:center;gap:4px;font-size:9px;font-weight:900;color:var(--muted)">
+              <div class="cal-cell ${cls}" style="width:12px;height:12px;border-radius:3px"></div>${lbl}
+            </div>`).join('')}
+        </div>
+        <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">
+          <div style="font-family:'Fredoka One',sans-serif;font-size:16px;margin-bottom:8px">XP Breakdown</div>
+          ${[
+            {lbl:'Language',xp:220,col:'var(--lang)'},
+            {lbl:'Maths',xp:140,col:'var(--math)'},
+            {lbl:'Pronunciation',xp:120,col:'var(--pron)'},
+          ].map(x=>`
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <div style="font-size:11px;font-weight:800;color:var(--muted);width:90px">${x.lbl}</div>
+              <div style="flex:1;height:8px;border-radius:4px;background:var(--surface2);overflow:hidden">
+                <div style="height:100%;border-radius:4px;background:${x.col};width:${x.xp/5}%"></div>
+              </div>
+              <div style="font-family:'Fredoka One',sans-serif;font-size:13px;color:var(--muted);width:40px;text-align:right">${x.xp}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Badges -->
+    <div class="section-label">Achievements</div>
+    <div style="font-family:'Fredoka One',sans-serif;font-size:18px;margin-bottom:14px">Badges & Milestones</div>
+    <div class="badges-grid">
+      ${BADGES.map(b=>`
+        <div class="badge-card ${b.earned?'earned':'locked'}">
+          <span class="badge-icon">${b.icon}</span>
+          <div class="badge-name">${b.name}</div>
+          <div class="badge-desc">${b.desc}</div>
+          ${b.earned?'<div class="badge-earned-tag">✓ Earned</div>':'<div style="font-size:9px;font-weight:900;color:var(--muted2);margin-top:6px;text-transform:uppercase;letter-spacing:.4px">🔒 Locked</div>'}
+        </div>`).join('')}
+    </div>
+  `;
+
+  // Animate mini fills and ring offsets after render
+  setTimeout(()=>{
+    document.querySelectorAll('.mini-fill').forEach(f=>{f.style.transition='width 1.1s cubic-bezier(.34,1.56,.64,1)';});
+    document.querySelectorAll('.ring-fill').forEach(r=>{r.style.transition='stroke-dashoffset 1.4s cubic-bezier(.34,1.56,.64,1)';});
+    // Fix two-col on mobile
+    const tc=document.querySelector('.two-col');
+    if(tc&&window.innerWidth<640)tc.style.gridTemplateColumns='1fr';
+  },60);
+}
+
+// ════════════════════════════════════════
+// SHARED UTILS
+// ════════════════════════════════════════
+function speak(text) {
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate=0.82; u.pitch=1.15; u.volume=1;
+  const voices = window.speechSynthesis.getVoices();
+  const v = voices.find(v=>v.lang.startsWith('en')&&(v.name.includes('Samantha')||v.name.includes('Karen')||v.name.includes('Moira')||v.name.includes('Female')));
+  if(v) u.voice=v;
+  window.speechSynthesis.speak(u);
+}
+window.speechSynthesis && (window.speechSynthesis.onvoiceschanged = ()=>{});
+
+function awardXP(n) {
+  ST.xp += n;
+  document.getElementById('xp-total').textContent = ST.xp;
+}
+
+function showSuccess(msg) {
+  const burst = document.getElementById('sBurst');
+  const label = document.getElementById('sLabel');
+  label.textContent = msg;
+  burst.classList.remove('show');
+  setTimeout(()=>burst.classList.add('show'), 10);
+  speak(msg.replace(/[^a-z0-9 !]/gi,''));
+  spawnConfetti();
+  setTimeout(()=>burst.classList.remove('show'), 2200);
+}
+
+function spawnConfetti() {
+  const colors = ['#2C6E3F','#5DCAA5','#97C459','#FFB347','#A78BFA','#E85555','#34D399'];
+  for(let i=0;i<22;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-p';
+    el.style.cssText = `left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*.5}s;animation-duration:${1.4+Math.random()*.8}s;transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 2600);
+  }
+}
+
+// ════════════════════════════════════════
+// MODULE 7 — READ ALONG (Ages 3–6)
+// Words + Sentences with letter-by-letter
+// highlight, syllable tap, speed control,
+// word-by-word autoplay & mic feedback
+// ════════════════════════════════════════
+
+const RA_WORDS = {
+  animals:[
+    {word:"Cat",      emoji:"🐱",phonetic:"/kæt/",        syllables:["Cat"],        meaning:"A furry pet that says meow"},
+    {word:"Dog",      emoji:"🐶",phonetic:"/dɒɡ/",        syllables:["Dog"],        meaning:"A loyal pet that loves to fetch"},
+    {word:"Bird",     emoji:"🐦",phonetic:"/bɜːrd/",      syllables:["Bird"],       meaning:"An animal with wings that flies"},
+    {word:"Fish",     emoji:"🐟",phonetic:"/fɪʃ/",        syllables:["Fish"],       meaning:"Swims in water and has fins"},
+    {word:"Frog",     emoji:"🐸",phonetic:"/frɒɡ/",       syllables:["Frog"],       meaning:"A green animal that hops and says ribbit"},
+    {word:"Duck",     emoji:"🦆",phonetic:"/dʌk/",        syllables:["Duck"],       meaning:"A bird that swims and says quack"},
+    {word:"Bee",      emoji:"🐝",phonetic:"/biː/",         syllables:["Bee"],        meaning:"A buzzing insect that makes honey"},
+    {word:"Elephant", emoji:"🐘",phonetic:"/ˈɛlɪfənt/",   syllables:["El","e","phant"], meaning:"The biggest land animal with a long trunk"},
+    {word:"Rabbit",   emoji:"🐰",phonetic:"/ˈræbɪt/",     syllables:["Rab","bit"],  meaning:"A fluffy animal with long ears that hops"},
+    {word:"Tiger",    emoji:"🐯",phonetic:"/ˈtaɪɡər/",    syllables:["Ti","ger"],   meaning:"A big striped wild cat"},
+    {word:"Lion",     emoji:"🦁",phonetic:"/ˈlaɪən/",     syllables:["Li","on"],    meaning:"The king of the jungle with a big mane"},
+    {word:"Horse",    emoji:"🐴",phonetic:"/hɔːrs/",      syllables:["Horse"],      meaning:"A large animal you can ride"},
+    {word:"Cow",      emoji:"🐄",phonetic:"/kaʊ/",        syllables:["Cow"],        meaning:"A farm animal that gives us milk"},
+    {word:"Sheep",    emoji:"🐑",phonetic:"/ʃiːp/",       syllables:["Sheep"],      meaning:"A woolly farm animal that says baa"},
+    {word:"Pig",      emoji:"🐷",phonetic:"/pɪɡ/",        syllables:["Pig"],        meaning:"A pink farm animal that loves mud"},
+    {word:"Hen",      emoji:"🐔",phonetic:"/hɛn/",        syllables:["Hen"],        meaning:"A farm bird that lays eggs"},
+    {word:"Bear",     emoji:"🐻",phonetic:"/bɛr/",        syllables:["Bear"],       meaning:"A big furry wild animal that loves honey"},
+    {word:"Fox",      emoji:"🦊",phonetic:"/fɒks/",       syllables:["Fox"],        meaning:"A clever orange animal with a bushy tail"},
+    {word:"Owl",      emoji:"🦉",phonetic:"/aʊl/",        syllables:["Owl"],        meaning:"A night bird that says hoo"},
+    {word:"Snake",    emoji:"🐍",phonetic:"/sneɪk/",      syllables:["Snake"],      meaning:"A long reptile with no legs"},
+    {word:"Monkey",   emoji:"🐒",phonetic:"/ˈmʌŋki/",    syllables:["Mon","key"],  meaning:"A playful animal that swings in trees"},
+    {word:"Penguin",  emoji:"🐧",phonetic:"/ˈpɛŋɡwɪn/",  syllables:["Pen","guin"], meaning:"A black and white bird that cannot fly"},
+    {word:"Giraffe",  emoji:"🦒",phonetic:"/dʒɪˈrɑːf/",  syllables:["Gi","raffe"], meaning:"The tallest animal with a very long neck"},
+    {word:"Zebra",    emoji:"🦓",phonetic:"/ˈziːbrə/",    syllables:["Ze","bra"],   meaning:"A horse with black and white stripes"},
+    {word:"Dolphin",  emoji:"🐬",phonetic:"/ˈdɒlfɪn/",   syllables:["Dol","phin"], meaning:"A smart sea creature that loves to jump"},
+    {word:"Turtle",   emoji:"🐢",phonetic:"/ˈtɜːrtl/",   syllables:["Tur","tle"],  meaning:"A slow reptile with a hard shell on its back"},
+    {word:"Butterfly",emoji:"🦋",phonetic:"/ˈbʌtərflaɪ/",syllables:["But","ter","fly"],meaning:"A beautiful insect with colourful wings"},
+    {word:"Spider",   emoji:"🕷️",phonetic:"/ˈspaɪdər/",  syllables:["Spi","der"],  meaning:"A small creature with eight legs"},
+    {word:"Crocodile",emoji:"🐊",phonetic:"/ˈkrɒkədaɪl/",syllables:["Croc","o","dile"],meaning:"A big reptile that lives near water"},
+    {word:"Parrot",   emoji:"🦜",phonetic:"/ˈpærət/",    syllables:["Par","rot"],  meaning:"A colourful bird that can copy your words"},
+    {word:"Whale",    emoji:"🐳",phonetic:"/weɪl/",        syllables:["Whale"],       meaning:"The largest animal on Earth that lives in the ocean"},
+    {word:"Gorilla",  emoji:"🦍",phonetic:"/ɡəˈrɪlə/",     syllables:["Go","ril","la"], meaning:"A very strong ape that lives in tropical forests"},
+    {word:"Flamingo", emoji:"🦩",phonetic:"/fləˈmɪŋɡoʊ/",  syllables:["Fla","min","go"],meaning:"A tall pink bird that stands on one leg"},
+    {word:"Panda",    emoji:"🐼",phonetic:"/ˈpændə/",       syllables:["Pan","da"],      meaning:"A black and white bear that eats bamboo"},
+    {word:"Kangaroo", emoji:"🦘",phonetic:"/ˌkæŋɡəˈruː/",  syllables:["Kan","ga","roo"],meaning:"An animal with a pouch that hops in Australia"},
+    {word:"Peacock",  emoji:"🦚",phonetic:"/ˈpiːkɒk/",     syllables:["Pea","cock"],    meaning:"A bird with a huge colourful tail like a fan"},
+    {word:"Hippo",    emoji:"🦛",phonetic:"/ˈhɪpoʊ/",      syllables:["Hip","po"],      meaning:"A large animal that loves to wallow in mud"},
+    {word:"Camel",    emoji:"🐪",phonetic:"/ˈkæməl/",      syllables:["Cam","el"],      meaning:"A desert animal with humps that stores water"},
+    {word:"Hedgehog", emoji:"🦔",phonetic:"/ˈhɛdʒhɒɡ/",   syllables:["Hedge","hog"],   meaning:"A small spiky animal that curls into a ball"},
+    {word:"Deer",     emoji:"🦌",phonetic:"/dɪr/",          syllables:["Deer"],          meaning:"A gentle wild animal with antlers on its head"},
+  ],
+  food:[
+    {word:"Apple",    emoji:"🍎",phonetic:"/ˈæpəl/",      syllables:["Ap","ple"],   meaning:"A round red or green crunchy fruit"},
+    {word:"Cake",     emoji:"🎂",phonetic:"/keɪk/",       syllables:["Cake"],       meaning:"A sweet baked treat for birthdays"},
+    {word:"Milk",     emoji:"🥛",phonetic:"/mɪlk/",       syllables:["Milk"],       meaning:"A white healthy drink from cows"},
+    {word:"Bread",    emoji:"🍞",phonetic:"/brɛd/",       syllables:["Bread"],      meaning:"Soft food baked in an oven"},
+    {word:"Egg",      emoji:"🥚",phonetic:"/ɛɡ/",         syllables:["Egg"],        meaning:"Laid by hens, great for breakfast"},
+    {word:"Banana",   emoji:"🍌",phonetic:"/bəˈnɑːnə/",  syllables:["Ba","na","na"],meaning:"A long yellow fruit monkeys love"},
+    {word:"Cookie",   emoji:"🍪",phonetic:"/ˈkʊki/",      syllables:["Cook","ie"],  meaning:"A sweet round baked snack"},
+    {word:"Juice",    emoji:"🧃",phonetic:"/dʒuːs/",      syllables:["Juice"],      meaning:"A sweet drink squeezed from fruit"},
+    {word:"Rice",     emoji:"🍚",phonetic:"/raɪs/",       syllables:["Rice"],       meaning:"Tiny white grains that we cook and eat"},
+    {word:"Soup",     emoji:"🍲",phonetic:"/suːp/",       syllables:["Soup"],       meaning:"A warm liquid food we eat with a spoon"},
+    {word:"Pizza",    emoji:"🍕",phonetic:"/ˈpiːtsə/",    syllables:["Piz","za"],   meaning:"A flat baked food with cheese and toppings"},
+    {word:"Carrot",   emoji:"🥕",phonetic:"/ˈkærət/",    syllables:["Car","rot"],  meaning:"An orange vegetable rabbits love"},
+    {word:"Cheese",   emoji:"🧀",phonetic:"/tʃiːz/",      syllables:["Cheese"],     meaning:"A tasty yellow or white food made from milk"},
+    {word:"Mango",    emoji:"🥭",phonetic:"/ˈmæŋɡoʊ/",   syllables:["Man","go"],   meaning:"A sweet orange tropical fruit"},
+    {word:"Grapes",   emoji:"🍇",phonetic:"/ɡreɪps/",    syllables:["Grapes"],     meaning:"Small round fruits that grow in bunches"},
+    {word:"Orange",   emoji:"🍊",phonetic:"/ˈɒrɪndʒ/",   syllables:["Or","ange"],  meaning:"A round citrus fruit with bright peel"},
+    {word:"Tomato",   emoji:"🍅",phonetic:"/təˈmɑːtoʊ/", syllables:["To","ma","to"],meaning:"A red round juicy fruit used in salads"},
+    {word:"Corn",     emoji:"🌽",phonetic:"/kɔːrn/",      syllables:["Corn"],       meaning:"A yellow vegetable with rows of kernels"},
+    {word:"Potato",   emoji:"🥔",phonetic:"/pəˈteɪtoʊ/", syllables:["Po","ta","to"],meaning:"A brown vegetable that grows underground"},
+    {word:"Strawberry",emoji:"🍓",phonetic:"/ˈstrɔːbəri/",syllables:["Straw","ber","ry"],meaning:"A small red sweet fruit with seeds outside"},
+    {word:"Watermelon",emoji:"🍉",phonetic:"/ˈwɔːtərˌmɛlən/",syllables:["Wa","ter","mel","on"],meaning:"A big green fruit with sweet red inside"},
+    {word:"Honey",    emoji:"🍯",phonetic:"/ˈhʌni/",      syllables:["Hon","ey"],   meaning:"A sweet golden food made by bees"},
+    {word:"Butter",   emoji:"🧈",phonetic:"/ˈbʌtər/",    syllables:["But","ter"],  meaning:"A creamy yellow spread made from cream"},
+    {word:"Chocolate",emoji:"🍫",phonetic:"/ˈtʃɒklɪt/",  syllables:["Choc","o","late"],meaning:"A sweet brown treat everyone loves"},
+    {word:"Noodles",  emoji:"🍜",phonetic:"/ˈnuːdlz/",   syllables:["Noo","dles"], meaning:"Long thin strips of pasta in soup or sauce"},
+    {word:"Pear",     emoji:"🍐",phonetic:"/pɛr/",         syllables:["Pear"],          meaning:"A sweet green or yellow fruit shaped like a teardrop"},
+    {word:"Cherry",   emoji:"🍒",phonetic:"/ˈtʃɛri/",      syllables:["Cher","ry"],      meaning:"A tiny round red fruit with a stone inside"},
+    {word:"Lemon",    emoji:"🍋",phonetic:"/ˈlɛmən/",      syllables:["Lem","on"],       meaning:"A sour yellow citrus fruit used in drinks"},
+    {word:"Mushroom", emoji:"🍄",phonetic:"/ˈmʌʃruːm/",   syllables:["Mush","room"],    meaning:"A fungus with a cap that grows in damp places"},
+    {word:"Broccoli", emoji:"🥦",phonetic:"/ˈbrɒkəli/",   syllables:["Broc","co","li"], meaning:"A green vegetable that looks like a tiny tree"},
+    {word:"Pumpkin",  emoji:"🎃",phonetic:"/ˈpʌmpkɪn/",   syllables:["Pump","kin"],     meaning:"A big orange vegetable used in soups and pies"},
+    {word:"Sandwich", emoji:"🥪",phonetic:"/ˈsænwɪtʃ/",   syllables:["Sand","wich"],    meaning:"Two slices of bread with filling in the middle"},
+    {word:"Pancake",  emoji:"🥞",phonetic:"/ˈpænkeɪk/",   syllables:["Pan","cake"],     meaning:"A flat round food made from batter and fried"},
+    {word:"Yogurt",   emoji:"🍶",phonetic:"/ˈjoʊɡərt/",   syllables:["Yo","gurt"],      meaning:"A creamy food made from milk, often with fruit"},
+    {word:"Ice cream",emoji:"🍦",phonetic:"/ˈaɪs kriːm/", syllables:["Ice","cream"],    meaning:"A sweet frozen treat in many yummy flavours"},
+  ],
+  nature:[
+    {word:"Sun",      emoji:"☀️",phonetic:"/sʌn/",        syllables:["Sun"],        meaning:"The big bright star that warms our planet"},
+    {word:"Moon",     emoji:"🌙",phonetic:"/muːn/",       syllables:["Moon"],       meaning:"It glows in the night sky and has craters"},
+    {word:"Rain",     emoji:"🌧️",phonetic:"/reɪn/",       syllables:["Rain"],       meaning:"Water that falls from clouds in the sky"},
+    {word:"Tree",     emoji:"🌳",phonetic:"/triː/",       syllables:["Tree"],       meaning:"A tall plant with a trunk, branches and leaves"},
+    {word:"Flower",   emoji:"🌸",phonetic:"/ˈflaʊər/",   syllables:["Flow","er"],  meaning:"A pretty plant with colourful petals"},
+    {word:"Star",     emoji:"⭐",phonetic:"/stɑːr/",      syllables:["Star"],       meaning:"A tiny light that twinkles in the night sky"},
+    {word:"Cloud",    emoji:"☁️",phonetic:"/klaʊd/",      syllables:["Cloud"],      meaning:"A fluffy white or grey shape in the sky"},
+    {word:"Rainbow",  emoji:"🌈",phonetic:"/ˈreɪnboʊ/",  syllables:["Rain","bow"], meaning:"Seven beautiful colours that appear after rain"},
+    {word:"Wind",     emoji:"💨",phonetic:"/wɪnd/",       syllables:["Wind"],       meaning:"Moving air that you can feel on your face"},
+    {word:"Snow",     emoji:"❄️",phonetic:"/snoʊ/",       syllables:["Snow"],       meaning:"White frozen water that falls in winter"},
+    {word:"River",    emoji:"🌊",phonetic:"/ˈrɪvər/",    syllables:["Riv","er"],   meaning:"A long flowing body of water"},
+    {word:"Mountain", emoji:"⛰️",phonetic:"/ˈmaʊntɪn/",  syllables:["Moun","tain"],meaning:"A very tall hill made of rock"},
+    {word:"Ocean",    emoji:"🌊",phonetic:"/ˈoʊʃən/",    syllables:["O","cean"],   meaning:"A huge body of deep salty water"},
+    {word:"Grass",    emoji:"🌿",phonetic:"/ɡrɑːs/",     syllables:["Grass"],      meaning:"Green plants that cover the ground"},
+    {word:"Rock",     emoji:"🪨",phonetic:"/rɒk/",        syllables:["Rock"],       meaning:"A hard piece of stone from the ground"},
+    {word:"Sand",     emoji:"🏖️",phonetic:"/sænd/",       syllables:["Sand"],       meaning:"Tiny grains found on beaches and deserts"},
+    {word:"Forest",   emoji:"🌲",phonetic:"/ˈfɒrɪst/",   syllables:["For","est"],  meaning:"A big area full of lots and lots of trees"},
+    {word:"Volcano",  emoji:"🌋",phonetic:"/vɒlˈkeɪnoʊ/",syllables:["Vol","ca","no"],meaning:"A mountain that can shoot out hot lava"},
+    {word:"Island",   emoji:"🏝️",phonetic:"/ˈaɪlənd/",   syllables:["Is","land"],  meaning:"A piece of land completely surrounded by water"},
+    {word:"Cave",     emoji:"🕳️",phonetic:"/keɪv/",       syllables:["Cave"],       meaning:"A dark hollow space inside a rock or hill"},
+    {word:"Thunder",  emoji:"⛈️",phonetic:"/ˈθʌndər/",     syllables:["Thun","der"],    meaning:"The loud booming sound during a storm"},
+    {word:"Lightning",emoji:"⚡",phonetic:"/ˈlaɪtnɪŋ/",   syllables:["Light","ning"],   meaning:"A bright flash of electricity in the sky"},
+    {word:"Waterfall",emoji:"🌊",phonetic:"/ˈwɔːtərfɔːl/",syllables:["Wa","ter","fall"],meaning:"Water that falls down from a great height"},
+    {word:"Desert",   emoji:"🏜️",phonetic:"/ˈdɛzərt/",    syllables:["Des","ert"],      meaning:"A very hot and dry land covered in sand"},
+    {word:"Iceberg",  emoji:"🧊",phonetic:"/ˈaɪsbɜːrɡ/",  syllables:["Ice","berg"],     meaning:"A huge block of ice floating in the ocean"},
+    {word:"Pond",     emoji:"🐸",phonetic:"/pɒnd/",        syllables:["Pond"],           meaning:"A small area of still water where frogs live"},
+    {word:"Valley",   emoji:"🌄",phonetic:"/ˈvæli/",       syllables:["Val","ley"],      meaning:"Low ground between two hills or mountains"},
+    {word:"Jungle",   emoji:"🌿",phonetic:"/ˈdʒʌŋɡl/",    syllables:["Jun","gle"],      meaning:"A thick tropical forest full of wild animals"},
+    {word:"Swamp",    emoji:"🐊",phonetic:"/swɒmp/",       syllables:["Swamp"],          meaning:"Wet muddy land that is partly covered with water"},
+    {word:"Meadow",   emoji:"🌾",phonetic:"/ˈmɛdoʊ/",     syllables:["Mea","dow"],      meaning:"A flat grassy field full of wild flowers"},
+  ],
+  actions:[
+    {word:"Jump",     emoji:"🦘",phonetic:"/dʒʌmp/",      syllables:["Jump"],       meaning:"To spring up off the ground"},
+    {word:"Run",      emoji:"🏃",phonetic:"/rʌn/",        syllables:["Run"],        meaning:"To move your legs very quickly"},
+    {word:"Swim",     emoji:"🏊",phonetic:"/swɪm/",       syllables:["Swim"],       meaning:"To move through water using your body"},
+    {word:"Sing",     emoji:"🎵",phonetic:"/sɪŋ/",        syllables:["Sing"],       meaning:"To make music using your voice"},
+    {word:"Clap",     emoji:"👏",phonetic:"/klæp/",       syllables:["Clap"],       meaning:"To hit both hands together to make a sound"},
+    {word:"Dance",    emoji:"💃",phonetic:"/dɑːns/",      syllables:["Dance"],      meaning:"To move your body in time to music"},
+    {word:"Sleep",    emoji:"😴",phonetic:"/sliːp/",      syllables:["Sleep"],      meaning:"To close your eyes and rest your body"},
+    {word:"Laugh",    emoji:"😄",phonetic:"/lɑːf/",       syllables:["Laugh"],      meaning:"To make a happy sound when something is funny"},
+    {word:"Eat",      emoji:"🍽️",phonetic:"/iːt/",        syllables:["Eat"],        meaning:"To put food in your mouth and chew it"},
+    {word:"Drink",    emoji:"🥤",phonetic:"/drɪŋk/",      syllables:["Drink"],      meaning:"To swallow a liquid like water or juice"},
+    {word:"Read",     emoji:"📖",phonetic:"/riːd/",       syllables:["Read"],       meaning:"To look at words and understand them"},
+    {word:"Write",    emoji:"✏️",phonetic:"/raɪt/",       syllables:["Write"],      meaning:"To make letters and words on paper"},
+    {word:"Draw",     emoji:"🎨",phonetic:"/drɔː/",       syllables:["Draw"],       meaning:"To make a picture with a pencil or crayon"},
+    {word:"Play",     emoji:"🎮",phonetic:"/pleɪ/",       syllables:["Play"],       meaning:"To have fun with toys or games"},
+    {word:"Hop",      emoji:"🐸",phonetic:"/hɒp/",        syllables:["Hop"],        meaning:"To jump on one foot or take small quick jumps"},
+    {word:"Crawl",    emoji:"👶",phonetic:"/krɔːl/",      syllables:["Crawl"],      meaning:"To move on your hands and knees"},
+    {word:"Fly",      emoji:"✈️",phonetic:"/flaɪ/",       syllables:["Fly"],        meaning:"To move through the air like a bird or plane"},
+    {word:"Cook",     emoji:"👨‍🍳",phonetic:"/kʊk/",        syllables:["Cook"],       meaning:"To make food hot and ready to eat"},
+    {word:"Hug",      emoji:"🤗",phonetic:"/hʌɡ/",        syllables:["Hug"],        meaning:"To hold someone close with your arms"},
+    {word:"Wave",     emoji:"👋",phonetic:"/weɪv/",       syllables:["Wave"],       meaning:"To move your hand to say hello or goodbye"},
+    {word:"Kick",     emoji:"⚽",phonetic:"/kɪk/",         syllables:["Kick"],          meaning:"To hit something with your foot"},
+    {word:"Throw",    emoji:"🏹",phonetic:"/θroʊ/",        syllables:["Throw"],          meaning:"To send something through the air with your hand"},
+    {word:"Catch",    emoji:"🧤",phonetic:"/kætʃ/",        syllables:["Catch"],          meaning:"To grab something that is flying towards you"},
+    {word:"Push",     emoji:"🚪",phonetic:"/pʊʃ/",         syllables:["Push"],           meaning:"To press something away from you with force"},
+    {word:"Pull",     emoji:"🪢",phonetic:"/pʊl/",         syllables:["Pull"],           meaning:"To bring something towards you with force"},
+    {word:"Climb",    emoji:"🧗",phonetic:"/klaɪm/",       syllables:["Climb"],          meaning:"To go up something using your hands and feet"},
+    {word:"Whisper",  emoji:"🤫",phonetic:"/ˈwɪspər/",    syllables:["Whis","per"],     meaning:"To speak very softly so only one person can hear"},
+    {word:"Smile",    emoji:"😊",phonetic:"/smaɪl/",       syllables:["Smile"],          meaning:"To curve your mouth upwards to show you are happy"},
+    {word:"Listen",   emoji:"👂",phonetic:"/ˈlɪsən/",      syllables:["Lis","ten"],      meaning:"To pay attention with your ears to sounds or words"},
+    {word:"Think",    emoji:"🤔",phonetic:"/θɪŋk/",        syllables:["Think"],          meaning:"To use your brain to work out ideas or answers"},
+  ],
+  colours:[
+    {word:"Red",      emoji:"🔴",phonetic:"/rɛd/",        syllables:["Red"],        meaning:"The colour of apples, fire engines and roses"},
+    {word:"Blue",     emoji:"🔵",phonetic:"/bluː/",       syllables:["Blue"],       meaning:"The colour of the sky and the ocean"},
+    {word:"Green",    emoji:"🟢",phonetic:"/ɡriːn/",      syllables:["Green"],      meaning:"The colour of grass, frogs and leaves"},
+    {word:"Yellow",   emoji:"🟡",phonetic:"/ˈjɛloʊ/",    syllables:["Yel","low"],  meaning:"The colour of the sun and bananas"},
+    {word:"Pink",     emoji:"🌸",phonetic:"/pɪŋk/",       syllables:["Pink"],       meaning:"A light red colour like flamingos"},
+    {word:"Orange",   emoji:"🟠",phonetic:"/ˈɒrɪndʒ/",   syllables:["Or","ange"],  meaning:"A warm colour between red and yellow"},
+    {word:"Purple",   emoji:"🟣",phonetic:"/ˈpɜːrpl/",   syllables:["Pur","ple"],  meaning:"A mix of red and blue — like grapes"},
+    {word:"White",    emoji:"⬜",phonetic:"/waɪt/",       syllables:["White"],      meaning:"The colour of snow, clouds and milk"},
+    {word:"Black",    emoji:"⬛",phonetic:"/blæk/",       syllables:["Black"],      meaning:"The darkest colour — like the night sky"},
+    {word:"Brown",    emoji:"🟫",phonetic:"/braʊn/",      syllables:["Brown"],      meaning:"The colour of chocolate and tree trunks"},
+    {word:"Grey",     emoji:"🌫️",phonetic:"/ɡreɪ/",       syllables:["Grey"],       meaning:"A mix of black and white — like storm clouds"},
+    {word:"Gold",     emoji:"🌟",phonetic:"/ɡoʊld/",      syllables:["Gold"],       meaning:"A shiny yellow colour like treasure"},
+    {word:"Silver",   emoji:"🥈",phonetic:"/ˈsɪlvər/",    syllables:["Sil","ver"],      meaning:"A shiny metallic grey colour like a coin"},
+    {word:"Turquoise",emoji:"🩵",phonetic:"/ˈtɜːrkwɔɪz/", syllables:["Tur","quoise"],   meaning:"A blue-green colour like a tropical sea"},
+    {word:"Crimson",  emoji:"🌹",phonetic:"/ˈkrɪmzən/",   syllables:["Crim","son"],     meaning:"A deep dark red colour like a rose"},
+    {word:"Violet",   emoji:"🌸",phonetic:"/ˈvaɪələt/",   syllables:["Vi","o","let"],   meaning:"A soft purple colour named after the violet flower"},
+    {word:"Amber",    emoji:"🟠",phonetic:"/ˈæmbər/",     syllables:["Am","ber"],       meaning:"A warm golden-orange colour like honey"},
+    {word:"Cream",    emoji:"🤍",phonetic:"/kriːm/",       syllables:["Cream"],          meaning:"A soft white colour like fresh dairy cream"},
+    {word:"Maroon",   emoji:"🟥",phonetic:"/məˈruːn/",    syllables:["Ma","roon"],      meaning:"A dark brownish-red colour"},
+    {word:"Indigo",   emoji:"💙",phonetic:"/ˈɪndɪɡoʊ/",  syllables:["In","di","go"],   meaning:"A deep blue-purple colour in the rainbow"},
+  ],
+  body:[
+    {word:"Head",     emoji:"🧠",phonetic:"/hɛd/",        syllables:["Head"],       meaning:"The top part of your body with your face"},
+    {word:"Eye",      emoji:"👁️",phonetic:"/aɪ/",          syllables:["Eye"],        meaning:"You use it to see the world around you"},
+    {word:"Ear",      emoji:"👂",phonetic:"/ɪr/",          syllables:["Ear"],        meaning:"You use it to hear sounds and music"},
+    {word:"Nose",     emoji:"👃",phonetic:"/noʊz/",        syllables:["Nose"],       meaning:"You use it to smell flowers and food"},
+    {word:"Mouth",    emoji:"👄",phonetic:"/maʊθ/",        syllables:["Mouth"],      meaning:"You use it to eat, speak and smile"},
+    {word:"Hand",     emoji:"✋",phonetic:"/hænd/",        syllables:["Hand"],       meaning:"At the end of your arm — you wave with it"},
+    {word:"Foot",     emoji:"🦶",phonetic:"/fʊt/",         syllables:["Foot"],       meaning:"At the end of your leg — you walk on it"},
+    {word:"Arm",      emoji:"💪",phonetic:"/ɑːrm/",        syllables:["Arm"],        meaning:"It connects your shoulder to your hand"},
+    {word:"Leg",      emoji:"🦵",phonetic:"/lɛɡ/",         syllables:["Leg"],        meaning:"It connects your hip to your foot"},
+    {word:"Finger",   emoji:"☝️",phonetic:"/ˈfɪŋɡər/",    syllables:["Fin","ger"],  meaning:"One of the five parts at the end of your hand"},
+    {word:"Hair",     emoji:"💇",phonetic:"/hɛr/",         syllables:["Hair"],       meaning:"It grows on top of your head"},
+    {word:"Teeth",    emoji:"🦷",phonetic:"/tiːθ/",        syllables:["Teeth"],      meaning:"The hard white parts in your mouth for chewing"},
+    {word:"Heart",    emoji:"❤️",phonetic:"/hɑːrt/",       syllables:["Heart"],      meaning:"The organ in your chest that pumps your blood"},
+    {word:"Tummy",    emoji:"🫃",phonetic:"/ˈtʌmi/",       syllables:["Tum","my"],   meaning:"Your belly — it growls when you are hungry"},
+    {word:"Knee",     emoji:"🦵",phonetic:"/niː/",          syllables:["Knee"],       meaning:"The joint in the middle of your leg"},
+    {word:"Shoulder", emoji:"💪",phonetic:"/ˈʃoʊldər/",   syllables:["Shoul","der"],    meaning:"The joint connecting your arm to your body"},
+    {word:"Elbow",    emoji:"💪",phonetic:"/ˈɛlboʊ/",     syllables:["El","bow"],       meaning:"The bendy joint in the middle of your arm"},
+    {word:"Wrist",    emoji:"⌚",phonetic:"/rɪst/",        syllables:["Wrist"],          meaning:"The joint between your hand and your forearm"},
+    {word:"Chin",     emoji:"😶",phonetic:"/tʃɪn/",        syllables:["Chin"],           meaning:"The bottom part of your face below your mouth"},
+    {word:"Cheek",    emoji:"😊",phonetic:"/tʃiːk/",       syllables:["Cheek"],          meaning:"The soft round part of your face on each side"},
+    {word:"Forehead", emoji:"🤔",phonetic:"/ˈfɔːrhɛd/",   syllables:["Fore","head"],    meaning:"The flat part of your face above your eyebrows"},
+    {word:"Tongue",   emoji:"👅",phonetic:"/tʌŋ/",         syllables:["Tongue"],         meaning:"The soft muscle in your mouth used for tasting"},
+    {word:"Thumb",    emoji:"👍",phonetic:"/θʌm/",         syllables:["Thumb"],          meaning:"The short thick finger on the side of your hand"},
+    {word:"Ankle",    emoji:"🦶",phonetic:"/ˈæŋkl/",      syllables:["An","kle"],       meaning:"The joint that connects your foot to your leg"},
+    {word:"Neck",     emoji:"🦒",phonetic:"/nɛk/",         syllables:["Neck"],           meaning:"The part of your body connecting your head to your shoulders"},
+  ],
+  places:[
+    {word:"Home",     emoji:"🏠",phonetic:"/hoʊm/",        syllables:["Home"],       meaning:"The place where you live with your family"},
+    {word:"School",   emoji:"🏫",phonetic:"/skuːl/",       syllables:["School"],     meaning:"The place where you learn and play with friends"},
+    {word:"Park",     emoji:"🛝",phonetic:"/pɑːrk/",       syllables:["Park"],       meaning:"An outdoor area with swings and slides"},
+    {word:"Shop",     emoji:"🏪",phonetic:"/ʃɒp/",         syllables:["Shop"],       meaning:"A place where you buy food and other things"},
+    {word:"Farm",     emoji:"🚜",phonetic:"/fɑːrm/",       syllables:["Farm"],       meaning:"A place where animals and crops are kept"},
+    {word:"Beach",    emoji:"🏖️",phonetic:"/biːtʃ/",       syllables:["Beach"],      meaning:"A sandy area beside the sea"},
+    {word:"Zoo",      emoji:"🦁",phonetic:"/zuː/",          syllables:["Zoo"],        meaning:"A place where you can see many wild animals"},
+    {word:"Library",  emoji:"📚",phonetic:"/ˈlaɪbrəri/",   syllables:["Li","brar","y"],meaning:"A place full of books you can borrow"},
+    {word:"Hospital", emoji:"🏥",phonetic:"/ˈhɒspɪtl/",   syllables:["Hos","pi","tal"],meaning:"A place where doctors help sick people get better"},
+    {word:"Kitchen",  emoji:"🍳",phonetic:"/ˈkɪtʃɪn/",    syllables:["Kitch","en"], meaning:"The room in your home where food is cooked"},
+    {word:"Garden",   emoji:"🌻",phonetic:"/ˈɡɑːrdən/",   syllables:["Gar","den"],  meaning:"An outdoor area where plants and flowers grow"},
+    {word:"Bedroom",  emoji:"🛏️",phonetic:"/ˈbɛdruːm/",   syllables:["Bed","room"], meaning:"The room where you sleep at night"},
+    {word:"Bathroom", emoji:"🛁",phonetic:"/ˈbæθruːm/",   syllables:["Bath","room"],meaning:"The room where you wash and brush your teeth"},
+    {word:"Airport",  emoji:"✈️",phonetic:"/ˈɛrpɔːrt/",   syllables:["Air","port"], meaning:"A place where aeroplanes take off and land"},
+    {word:"City",     emoji:"🏙️",phonetic:"/ˈsɪti/",       syllables:["Ci","ty"],    meaning:"A big busy town with lots of buildings and people"},
+    {word:"Castle",   emoji:"🏰",phonetic:"/ˈkɑːsl/",      syllables:["Cas","tle"],      meaning:"A large old stone building where kings and queens lived"},
+    {word:"Market",   emoji:"🛒",phonetic:"/ˈmɑːrkɪt/",   syllables:["Mar","ket"],      meaning:"A place where people buy and sell food and goods"},
+    {word:"Bakery",   emoji:"🥐",phonetic:"/ˈbeɪkəri/",   syllables:["Bak","er","y"],   meaning:"A shop where bread, cakes and pastries are made and sold"},
+    {word:"Pond",     emoji:"🐸",phonetic:"/pɒnd/",        syllables:["Pond"],           meaning:"A small area of water where ducks and frogs live"},
+    {word:"Garage",   emoji:"🚗",phonetic:"/ˈɡærɑːʒ/",    syllables:["Ga","rage"],      meaning:"A covered space where cars are parked or fixed"},
+    {word:"Museum",   emoji:"🏛️",phonetic:"/mjuːˈziːəm/", syllables:["Mu","se","um"],   meaning:"A building where interesting objects are kept and displayed"},
+    {word:"Playground",emoji:"🛝",phonetic:"/ˈpleɪɡraʊnd/",syllables:["Play","ground"],  meaning:"An outdoor area with equipment for children to play on"},
+    {word:"Forest",   emoji:"🌲",phonetic:"/ˈfɒrɪst/",    syllables:["For","est"],      meaning:"A large area covered with many trees and wildlife"},
+    {word:"Classroom",emoji:"🏫",phonetic:"/ˈklɑːsruːm/", syllables:["Class","room"],   meaning:"The room inside school where you sit and learn"},
+    {word:"Clinic",   emoji:"🏥",phonetic:"/ˈklɪnɪk/",    syllables:["Clin","ic"],      meaning:"A place where a doctor or nurse checks if you are well"},
+  ],
+  objects:[
+    {word:"Ball",     emoji:"⚽",phonetic:"/bɔːl/",        syllables:["Ball"],       meaning:"A round object you throw, kick or bounce"},
+    {word:"Book",     emoji:"📚",phonetic:"/bʊk/",         syllables:["Book"],       meaning:"Pages with words and pictures to read"},
+    {word:"Chair",    emoji:"🪑",phonetic:"/tʃɛr/",        syllables:["Chair"],      meaning:"A piece of furniture you sit on"},
+    {word:"Table",    emoji:"🪞",phonetic:"/ˈteɪbl/",      syllables:["Ta","ble"],   meaning:"A flat surface on legs you put things on"},
+    {word:"Bed",      emoji:"🛏️",phonetic:"/bɛd/",         syllables:["Bed"],        meaning:"The soft furniture you sleep in at night"},
+    {word:"Box",      emoji:"📦",phonetic:"/bɒks/",        syllables:["Box"],        meaning:"A container with sides and a lid"},
+    {word:"Bag",      emoji:"🎒",phonetic:"/bæɡ/",         syllables:["Bag"],        meaning:"A container you carry your things in"},
+    {word:"Clock",    emoji:"⏰",phonetic:"/klɒk/",        syllables:["Clock"],      meaning:"It tells you what time it is"},
+    {word:"Pencil",   emoji:"✏️",phonetic:"/ˈpɛnsɪl/",    syllables:["Pen","cil"],  meaning:"A thin stick you use to write and draw"},
+    {word:"Scissors", emoji:"✂️",phonetic:"/ˈsɪzərz/",    syllables:["Scis","sors"],meaning:"A sharp tool with two blades used to cut paper"},
+    {word:"Umbrella", emoji:"☂️",phonetic:"/ʌmˈbrɛlə/",   syllables:["Um","brel","la"],meaning:"You open it above your head to stay dry in rain"},
+    {word:"Phone",    emoji:"📱",phonetic:"/foʊn/",        syllables:["Phone"],      meaning:"A device you use to call and talk to people"},
+    {word:"Cup",      emoji:"☕",phonetic:"/kʌp/",          syllables:["Cup"],        meaning:"A small container you drink from"},
+    {word:"Spoon",    emoji:"🥄",phonetic:"/spuːn/",       syllables:["Spoon"],      meaning:"A utensil shaped like a small bowl on a stick"},
+    {word:"Kite",     emoji:"🪁",phonetic:"/kaɪt/",        syllables:["Kite"],       meaning:"A toy that flies in the wind on a string"},
+    {word:"Drum",     emoji:"🥁",phonetic:"/drʌm/",        syllables:["Drum"],       meaning:"A musical instrument you hit with sticks"},
+    {word:"Crayon",   emoji:"🖍️",phonetic:"/ˈkreɪɒn/",    syllables:["Cray","on"],  meaning:"A coloured wax stick used for drawing"},
+    {word:"Pillow",   emoji:"🛏️",phonetic:"/ˈpɪloʊ/",     syllables:["Pil","low"],  meaning:"The soft cushion you rest your head on in bed"},
+    {word:"Mirror",   emoji:"🪞",phonetic:"/ˈmɪrər/",      syllables:["Mir","ror"],  meaning:"A shiny surface that reflects your image back"},
+    {word:"Balloon",  emoji:"🎈",phonetic:"/bəˈluːn/",     syllables:["Bal","loon"], meaning:"A colourful rubber bag filled with air"},
+    {word:"Torch",    emoji:"🔦",phonetic:"/tɔːrtʃ/",      syllables:["Torch"],          meaning:"A small light you carry in your hand in the dark"},
+    {word:"Telescope",emoji:"🔭",phonetic:"/ˈtɛlɪskoʊp/", syllables:["Tel","e","scope"], meaning:"A long tube used to see stars and planets far away"},
+    {word:"Magnet",   emoji:"🧲",phonetic:"/ˈmæɡnɪt/",    syllables:["Mag","net"],      meaning:"A metal object that attracts iron and steel"},
+    {word:"Puzzle",   emoji:"🧩",phonetic:"/ˈpʌzl/",       syllables:["Puz","zle"],      meaning:"A game where you fit pieces together to make a picture"},
+    {word:"Backpack", emoji:"🎒",phonetic:"/ˈbækpæk/",    syllables:["Back","pack"],    meaning:"A bag with two straps that you wear on your back"},
+    {word:"Blanket",  emoji:"🛏️",phonetic:"/ˈblæŋkɪt/",   syllables:["Blan","ket"],     meaning:"A warm soft covering used on a bed or sofa"},
+    {word:"Ladder",   emoji:"🪜",phonetic:"/ˈlædər/",      syllables:["Lad","der"],      meaning:"A frame with steps used to climb up and down"},
+    {word:"Candle",   emoji:"🕯️",phonetic:"/ˈkændl/",      syllables:["Can","dle"],      meaning:"A wax stick with a wick that burns to give light"},
+    {word:"Compass",  emoji:"🧭",phonetic:"/ˈkʌmpəs/",    syllables:["Com","pass"],     meaning:"A tool with a needle that always points north"},
+    {word:"Globe",    emoji:"🌍",phonetic:"/ɡloʊb/",       syllables:["Globe"],          meaning:"A round model of the Earth that you can spin"},
+  ],
+  transport:[
+    {word:"Car",      emoji:"🚗",phonetic:"/kɑːr/",        syllables:["Car"],        meaning:"A vehicle with four wheels and an engine"},
+    {word:"Bus",      emoji:"🚌",phonetic:"/bʌs/",         syllables:["Bus"],        meaning:"A large vehicle that carries many passengers"},
+    {word:"Train",    emoji:"🚂",phonetic:"/treɪn/",       syllables:["Train"],      meaning:"A vehicle that travels on rails or tracks"},
+    {word:"Plane",    emoji:"✈️",phonetic:"/pleɪn/",       syllables:["Plane"],      meaning:"A flying machine with wings and engines"},
+    {word:"Boat",     emoji:"⛵",phonetic:"/boʊt/",        syllables:["Boat"],       meaning:"A vehicle that floats and travels on water"},
+    {word:"Bike",     emoji:"🚲",phonetic:"/baɪk/",        syllables:["Bike"],       meaning:"A two-wheeled vehicle you pedal with your feet"},
+    {word:"Truck",    emoji:"🚚",phonetic:"/trʌk/",        syllables:["Truck"],      meaning:"A big vehicle used to carry heavy loads"},
+    {word:"Rocket",   emoji:"🚀",phonetic:"/ˈrɒkɪt/",     syllables:["Rock","et"],  meaning:"A spacecraft that blasts into outer space"},
+    {word:"Ship",     emoji:"🚢",phonetic:"/ʃɪp/",         syllables:["Ship"],       meaning:"A very large boat that sails on the ocean"},
+    {word:"Helicopter",emoji:"🚁",phonetic:"/ˈhɛlɪˌkɒptər/",syllables:["Hel","i","cop","ter"],meaning:"A flying machine with spinning blades on top"},
+    {word:"Ambulance",emoji:"🚑",phonetic:"/ˈæmbjʊləns/", syllables:["Am","bu","lance"],meaning:"A special vehicle that helps people in emergencies"},
+    {word:"Tractor",  emoji:"🚜",phonetic:"/ˈtræktər/",   syllables:["Trac","tor"], meaning:"A big farm vehicle used to plough fields"},
+    {word:"Submarine",emoji:"🤿",phonetic:"/ˈsʌbməriːn/",  syllables:["Sub","ma","rine"],meaning:"A vehicle that travels underwater in the ocean"},
+    {word:"Scooter",  emoji:"🛴",phonetic:"/ˈskuːtər/",    syllables:["Scoo","ter"],     meaning:"A small vehicle you stand on and push with your foot"},
+    {word:"Ferry",    emoji:"⛴️",phonetic:"/ˈfɛri/",       syllables:["Fer","ry"],       meaning:"A boat that carries people and cars across water"},
+    {word:"Trolley",  emoji:"🛒",phonetic:"/ˈtrɒli/",      syllables:["Trol","ley"],     meaning:"A wheeled cart used in shops to carry groceries"},
+    {word:"Canoe",    emoji:"🛶",phonetic:"/kəˈnuː/",      syllables:["Ca","noe"],       meaning:"A narrow boat paddled with an oar"},
+    {word:"Balloon",  emoji:"🎈",phonetic:"/bəˈluːn/",     syllables:["Bal","loon"],     meaning:"A large bag filled with gas that floats in the air"},
+    {word:"Lorry",    emoji:"🚛",phonetic:"/ˈlɒri/",        syllables:["Lor","ry"],       meaning:"A very large vehicle used to carry heavy goods"},
+    {word:"Motorbike",emoji:"🏍️",phonetic:"/ˈmoʊtərbaɪk/",syllables:["Mo","tor","bike"], meaning:"A two-wheeled vehicle with a powerful engine"},
+  ],
+  feelings:[
+    {word:"Happy",    emoji:"😊",phonetic:"/ˈhæpi/",       syllables:["Hap","py"],   meaning:"Feeling joyful and full of smiles"},
+    {word:"Sad",      emoji:"😢",phonetic:"/sæd/",          syllables:["Sad"],        meaning:"Feeling unhappy, sometimes making you cry"},
+    {word:"Angry",    emoji:"😠",phonetic:"/ˈæŋɡri/",      syllables:["An","gry"],   meaning:"Feeling very cross or upset about something"},
+    {word:"Scared",   emoji:"😨",phonetic:"/skɛrd/",        syllables:["Scared"],     meaning:"Feeling frightened or afraid of something"},
+    {word:"Excited",  emoji:"🤩",phonetic:"/ɪkˈsaɪtɪd/",  syllables:["Ex","cit","ed"],meaning:"Feeling very happy and eager about something"},
+    {word:"Tired",    emoji:"😴",phonetic:"/ˈtaɪrd/",       syllables:["Tired"],      meaning:"Feeling like you need to rest or sleep"},
+    {word:"Surprised",emoji:"😲",phonetic:"/sərˈpraɪzd/",  syllables:["Sur","prised"],meaning:"Feeling shocked when something unexpected happens"},
+    {word:"Proud",    emoji:"🥹",phonetic:"/praʊd/",        syllables:["Proud"],      meaning:"Feeling really pleased about something you did"},
+    {word:"Brave",    emoji:"🦁",phonetic:"/breɪv/",        syllables:["Brave"],      meaning:"Not being afraid even when things feel hard"},
+    {word:"Kind",     emoji:"🤝",phonetic:"/kaɪnd/",        syllables:["Kind"],       meaning:"Being caring and friendly to other people"},
+    {word:"Lonely",   emoji:"😔",phonetic:"/ˈloʊnli/",      syllables:["Lone","ly"],  meaning:"Feeling sad because you are by yourself"},
+    {word:"Calm",     emoji:"😌",phonetic:"/kɑːm/",         syllables:["Calm"],       meaning:"Feeling peaceful and not worried or upset"},
+    {word:"Confused",  emoji:"😕",phonetic:"/kənˈfjuːzd/",  syllables:["Con","fused"],    meaning:"When you do not understand something clearly"},
+    {word:"Grateful",  emoji:"🙏",phonetic:"/ˈɡreɪtfl/",   syllables:["Grate","ful"],    meaning:"Feeling thankful for the good things in your life"},
+    {word:"Silly",     emoji:"🤪",phonetic:"/ˈsɪli/",       syllables:["Sil","ly"],       meaning:"Acting funny and not very serious — just for fun"},
+    {word:"Nervous",   emoji:"😬",phonetic:"/ˈnɜːrvəs/",   syllables:["Ner","vous"],     meaning:"Feeling worried or anxious before something happens"},
+    {word:"Jealous",   emoji:"😒",phonetic:"/ˈdʒɛləs/",    syllables:["Jeal","ous"],     meaning:"Wishing you had what someone else has"},
+    {word:"Cheerful",  emoji:"😄",phonetic:"/ˈtʃɪrfl/",    syllables:["Cheer","ful"],    meaning:"Feeling bright, happy and full of good energy"},
+    {word:"Bored",     emoji:"😑",phonetic:"/bɔːrd/",       syllables:["Bored"],          meaning:"Feeling like there is nothing interesting to do"},
+    {word:"Relaxed",   emoji:"😌",phonetic:"/rɪˈlækst/",   syllables:["Re","laxed"],     meaning:"Feeling calm, peaceful and without any worry"},
+  ],
+};
+
+const RA_SENTENCES = [
+  // ── LEVEL 1 · Ages 3–4 · Very short CVC patterns ──
+  {text:"The cat sat.",           scene:"🐱",words:["The","cat","sat."],              phonetics:["ðə","kæt","sæt"],                    meaning:"The cat sat down on the mat.",                 level:1,age:"3–4"},
+  {text:"I see a dog.",           scene:"🐶",words:["I","see","a","dog."],             phonetics:["aɪ","siː","ə","dɒɡ"],                meaning:"I can see a dog over there.",                  level:1,age:"3–4"},
+  {text:"The sun is hot.",        scene:"☀️",words:["The","sun","is","hot."],          phonetics:["ðə","sʌn","ɪz","hɒt"],               meaning:"Today the sun feels very warm.",               level:1,age:"3–4"},
+  {text:"A big red bus.",         scene:"🚌",words:["A","big","red","bus."],           phonetics:["ə","bɪɡ","rɛd","bʌs"],               meaning:"Look at the big red bus go!",                  level:1,age:"3–4"},
+  {text:"My cat is fat.",         scene:"😸",words:["My","cat","is","fat."],           phonetics:["maɪ","kæt","ɪz","fæt"],              meaning:"My cat eats too many snacks!",                 level:1,age:"3–4"},
+  {text:"I can hop.",             scene:"🐸",words:["I","can","hop."],                 phonetics:["aɪ","kæn","hɒp"],                    meaning:"Watch me hop up and down!",                    level:1,age:"3–4"},
+  {text:"The pig is big.",        scene:"🐷",words:["The","pig","is","big."],          phonetics:["ðə","pɪɡ","ɪz","bɪɡ"],              meaning:"That is a very large pig!",                    level:1,age:"3–4"},
+  {text:"I like jam.",            scene:"🍓",words:["I","like","jam."],                phonetics:["aɪ","laɪk","dʒæm"],                  meaning:"Jam is sweet and sticky!",                     level:1,age:"3–4"},
+  {text:"The hen lays eggs.",     scene:"🐔",words:["The","hen","lays","eggs."],       phonetics:["ðə","hɛn","leɪz","ɛɡz"],            meaning:"A hen can lay eggs every day.",                level:1,age:"3–4"},
+  {text:"I am hot.",              scene:"🥵",words:["I","am","hot."],                  phonetics:["aɪ","æm","hɒt"],                     meaning:"It is a very warm day today.",                 level:1,age:"3–4"},
+  {text:"The cup is red.",        scene:"☕",words:["The","cup","is","red."],          phonetics:["ðə","kʌp","ɪz","rɛd"],              meaning:"That cup is a bright red colour.",             level:1,age:"3–4"},
+  {text:"A dog can run.",         scene:"🐕",words:["A","dog","can","run."],           phonetics:["ə","dɒɡ","kæn","rʌn"],              meaning:"Dogs love to run and play.",                   level:1,age:"3–4"},
+  {text:"I see a bee.",           scene:"🐝",words:["I","see","a","bee."],             phonetics:["aɪ","siː","ə","biː"],                meaning:"A little bee is buzzing by.",                  level:1,age:"3–4"},
+  {text:"The bag is big.",        scene:"🎒",words:["The","bag","is","big."],          phonetics:["ðə","bæɡ","ɪz","bɪɡ"],              meaning:"My school bag is very big!",                   level:1,age:"3–4"},
+  {text:"I can clap.",            scene:"👏",words:["I","can","clap."],                phonetics:["aɪ","kæn","klæp"],                   meaning:"I can clap my hands together!",                level:1,age:"3–4"},
+  {text:"The fish is wet.",       scene:"🐟",words:["The","fish","is","wet."],         phonetics:["ðə","fɪʃ","ɪz","wɛt"],              meaning:"Fish live in water so they are always wet.",   level:1,age:"3–4"},
+  {text:"I can sit.",             scene:"🧒",words:["I","can","sit."],                 phonetics:["aɪ","kæn","sɪt"],                    meaning:"I know how to sit down nicely.",               level:1,age:"3–4"},
+  {text:"The mud is wet.",        scene:"💧",words:["The","mud","is","wet."],          phonetics:["ðə","mʌd","ɪz","wɛt"],              meaning:"The mud squelches under your feet.",           level:1,age:"3–4"},
+  {text:"A rat can run.",         scene:"🐀",words:["A","rat","can","run."],           phonetics:["ə","ræt","kæn","rʌn"],               meaning:"Rats are quick and can run fast.",             level:1,age:"3–4"},
+  {text:"I am sad.",              scene:"😢",words:["I","am","sad."],                  phonetics:["aɪ","æm","sæd"],                     meaning:"It is okay to feel sad sometimes.",            level:1,age:"3–4"},
+  // ── LEVEL 2 · Ages 4–5 · Simple subject–verb–object ──
+  {text:"The dog runs fast.",           scene:"🐕",words:["The","dog","runs","fast."],              phonetics:["ðə","dɒɡ","rʌnz","fɑːst"],              meaning:"The dog is a very speedy runner!",              level:2,age:"4–5"},
+  {text:"I like to eat cake.",          scene:"🎂",words:["I","like","to","eat","cake."],            phonetics:["aɪ","laɪk","tə","iːt","keɪk"],           meaning:"Cake is a sweet and yummy treat.",              level:2,age:"4–5"},
+  {text:"The bird can fly high.",       scene:"🐦",words:["The","bird","can","fly","high."],         phonetics:["ðə","bɜːd","kæn","flaɪ","haɪ"],          meaning:"Birds use their wings to soar up high.",       level:2,age:"4–5"},
+  {text:"She has a pink hat.",          scene:"🎀",words:["She","has","a","pink","hat."],            phonetics:["ʃiː","hæz","ə","pɪŋk","hæt"],            meaning:"Her hat is a pretty shade of pink.",           level:2,age:"4–5"},
+  {text:"We play in the park.",         scene:"🛝",words:["We","play","in","the","park."],           phonetics:["wiː","pleɪ","ɪn","ðə","pɑːk"],           meaning:"The park is our favourite place to play.",     level:2,age:"4–5"},
+  {text:"The cow gives us milk.",       scene:"🐄",words:["The","cow","gives","us","milk."],         phonetics:["ðə","kaʊ","ɡɪvz","ʌs","mɪlk"],           meaning:"Cows are kind animals that give us milk.",     level:2,age:"4–5"},
+  {text:"My mum is very kind.",         scene:"👩",words:["My","mum","is","very","kind."],           phonetics:["maɪ","mʌm","ɪz","ˈvɛri","kaɪnd"],        meaning:"Mums are caring and loving to their families.", level:2,age:"4–5"},
+  {text:"I brush my teeth.",            scene:"🦷",words:["I","brush","my","teeth."],                phonetics:["aɪ","brʌʃ","maɪ","tiːθ"],                 meaning:"I brush my teeth to keep them clean and white.",level:2,age:"4–5"},
+  {text:"The frog can jump.",           scene:"🐸",words:["The","frog","can","jump."],               phonetics:["ðə","frɒɡ","kæn","dʒʌmp"],               meaning:"Frogs have strong legs for jumping.",          level:2,age:"4–5"},
+  {text:"We love our pets.",            scene:"🐾",words:["We","love","our","pets."],                phonetics:["wiː","lʌv","aʊər","pɛts"],                meaning:"Our pets are part of our family.",             level:2,age:"4–5"},
+  {text:"The star shines at night.",    scene:"⭐",words:["The","star","shines","at","night."],      phonetics:["ðə","stɑːr","ʃaɪnz","æt","naɪt"],        meaning:"Stars light up the sky when it gets dark.",    level:2,age:"4–5"},
+  {text:"I have two hands.",            scene:"✋",words:["I","have","two","hands."],                 phonetics:["aɪ","hæv","tuː","hændz"],                 meaning:"I can wave, clap and draw with my two hands.", level:2,age:"4–5"},
+  {text:"The bee makes honey.",         scene:"🍯",words:["The","bee","makes","honey."],             phonetics:["ðə","biː","meɪks","ˈhʌni"],               meaning:"Bees collect nectar and turn it into honey.",  level:2,age:"4–5"},
+  {text:"I can see the moon.",          scene:"🌙",words:["I","can","see","the","moon."],             phonetics:["aɪ","kæn","siː","ðə","muːn"],             meaning:"The moon glows softly in the night sky.",      level:2,age:"4–5"},
+  {text:"My dad reads a book.",         scene:"📖",words:["My","dad","reads","a","book."],            phonetics:["maɪ","dæd","riːdz","ə","bʊk"],            meaning:"Reading books is fun and teaches us things.",  level:2,age:"4–5"},
+  {text:"The cat drinks water.",        scene:"🐱",words:["The","cat","drinks","water."],             phonetics:["ðə","kæt","drɪŋks","ˈwɔːtər"],           meaning:"Animals need clean water to stay healthy.",    level:2,age:"4–5"},
+  {text:"I wear a blue coat.",          scene:"🧥",words:["I","wear","a","blue","coat."],             phonetics:["aɪ","wɛr","ə","bluː","koʊt"],             meaning:"A warm coat keeps me cosy in cold weather.",   level:2,age:"4–5"},
+  {text:"The ducks swim on the pond.",  scene:"🦆",words:["The","ducks","swim","on","the","pond."],  phonetics:["ðə","dʌks","swɪm","ɒn","ðə","pɒnd"],    meaning:"Ducks love to paddle in the water.",           level:2,age:"4–5"},
+  {text:"We eat rice for dinner.",      scene:"🍚",words:["We","eat","rice","for","dinner."],         phonetics:["wiː","iːt","raɪs","fər","ˈdɪnər"],        meaning:"Rice is a food eaten by people all over the world.",level:2,age:"4–5"},
+  {text:"The sun sets in the sky.",     scene:"🌅",words:["The","sun","sets","in","the","sky."],     phonetics:["ðə","sʌn","sɛts","ɪn","ðə","skaɪ"],     meaning:"The sky turns orange and red as the sun goes down.",level:2,age:"4–5"},
+  // ── LEVEL 3 · Ages 5–6 · Longer expressive sentences ──
+  {text:"The rabbit hops over the log.",          scene:"🐰",words:["The","rabbit","hops","over","the","log."],           phonetics:["ðə","ˈræbɪt","hɒps","ˈoʊvər","ðə","lɒɡ"],          meaning:"The little rabbit jumps right over the big log.",     level:3,age:"5–6"},
+  {text:"Flowers grow after the rain.",           scene:"🌸",words:["Flowers","grow","after","the","rain."],              phonetics:["ˈflaʊərz","ɡroʊ","ˈɑːftər","ðə","reɪn"],           meaning:"Rain helps flowers bloom big and bright.",            level:3,age:"5–6"},
+  {text:"The little frog jumped in.",             scene:"🐸",words:["The","little","frog","jumped","in."],               phonetics:["ðə","ˈlɪtl","frɒɡ","dʒʌmpt","ɪn"],                 meaning:"The small frog leaped straight into the pond.",       level:3,age:"5–6"},
+  {text:"We can see stars at night.",             scene:"🌟",words:["We","can","see","stars","at","night."],             phonetics:["wiː","kæn","siː","stɑːrz","æt","naɪt"],             meaning:"Stars shine brightly when the sky gets dark.",        level:3,age:"5–6"},
+  {text:"The elephant drinks lots of water.",     scene:"🐘",words:["The","elephant","drinks","lots","of","water."],     phonetics:["ðə","ˈɛlɪfənt","drɪŋks","lɒts","əv","ˈwɔːtər"],   meaning:"Elephants need a huge amount of water every single day.",level:3,age:"5–6"},
+  {text:"She feeds the hungry ducks.",            scene:"🦆",words:["She","feeds","the","hungry","ducks."],              phonetics:["ʃiː","fiːdz","ðə","ˈhʌŋɡri","dʌks"],               meaning:"She throws breadcrumbs to the ducks at the pond.",    level:3,age:"5–6"},
+  {text:"The rainbow has seven colours.",         scene:"🌈",words:["The","rainbow","has","seven","colours."],           phonetics:["ðə","ˈreɪnboʊ","hæz","ˈsɛvən","ˈkʌlərz"],          meaning:"Red, orange, yellow, green, blue, indigo and violet.", level:3,age:"5–6"},
+  {text:"Birds fly south in the winter.",         scene:"🐦",words:["Birds","fly","south","in","the","winter."],         phonetics:["bɜːrdz","flaɪ","saʊθ","ɪn","ðə","ˈwɪntər"],        meaning:"Many birds travel to warm places when it gets cold.", level:3,age:"5–6"},
+  {text:"The children played in the garden.",     scene:"🌻",words:["The","children","played","in","the","garden."],     phonetics:["ðə","ˈtʃɪldrən","pleɪd","ɪn","ðə","ˈɡɑːrdən"],     meaning:"They ran and laughed among the flowers all afternoon.", level:3,age:"5–6"},
+  {text:"He climbed the tall apple tree.",        scene:"🍎",words:["He","climbed","the","tall","apple","tree."],        phonetics:["hiː","klaɪmd","ðə","tɔːl","ˈæpəl","triː"],          meaning:"He carefully climbed all the way up the apple tree.", level:3,age:"5–6"},
+  {text:"The puppy wagged its fluffy tail.",      scene:"🐶",words:["The","puppy","wagged","its","fluffy","tail."],      phonetics:["ðə","ˈpʌpi","wæɡd","ɪts","ˈflʌfi","teɪl"],         meaning:"The happy puppy shook its tail from side to side.",   level:3,age:"5–6"},
+  {text:"We baked cookies in the oven.",          scene:"🍪",words:["We","baked","cookies","in","the","oven."],          phonetics:["wiː","beɪkt","ˈkʊkiz","ɪn","ðə","ˈʌvən"],          meaning:"The warm cookies smelled delicious when they came out.",level:3,age:"5–6"},
+  {text:"The baby penguin slid on ice.",          scene:"🐧",words:["The","baby","penguin","slid","on","ice."],          phonetics:["ðə","ˈbeɪbi","ˈpɛŋɡwɪn","slɪd","ɒn","aɪs"],       meaning:"The tiny penguin slipped and slid across the ice.",   level:3,age:"5–6"},
+  {text:"Leaves fall from the trees in autumn.",  scene:"🍂",words:["Leaves","fall","from","the","trees","in","autumn."],phonetics:["liːvz","fɔːl","frəm","ðə","triːz","ɪn","ˈɔːtəm"],  meaning:"In autumn the leaves turn orange and drift to the ground.",level:3,age:"5–6"},
+  {text:"My little sister loves to draw.",        scene:"🎨",words:["My","little","sister","loves","to","draw."],        phonetics:["maɪ","ˈlɪtl","ˈsɪstər","lʌvz","tə","drɔː"],        meaning:"She draws colourful pictures of animals and flowers.", level:3,age:"5–6"},
+  {text:"The sun hides behind a big cloud.",      scene:"☁️",words:["The","sun","hides","behind","a","big","cloud."],    phonetics:["ðə","sʌn","haɪdz","bɪˈhaɪnd","ə","bɪɡ","klaʊd"],  meaning:"Sometimes clouds cover the sun and make it feel cooler.",level:3,age:"5–6"},
+  {text:"Dolphins leap out of the water.",        scene:"🐬",words:["Dolphins","leap","out","of","the","water."],        phonetics:["ˈdɒlfɪnz","liːp","aʊt","əv","ðə","ˈwɔːtər"],       meaning:"Dolphins are playful and love to jump high in the air.",level:3,age:"5–6"},
+  {text:"We planted seeds in the garden.",        scene:"🌱",words:["We","planted","seeds","in","the","garden."],        phonetics:["wiː","ˈplæntɪd","siːdz","ɪn","ðə","ˈɡɑːrdən"],     meaning:"Soon tiny green shoots will grow up through the soil.", level:3,age:"5–6"},
+  {text:"The moon glows bright at night.",        scene:"🌕",words:["The","moon","glows","bright","at","night."],        phonetics:["ðə","muːn","ɡloʊz","braɪt","æt","naɪt"],            meaning:"The full moon lights up the whole sky at nighttime.",  level:3,age:"5–6"},
+  {text:"Butterflies land on pretty flowers.",    scene:"🦋",words:["Butterflies","land","on","pretty","flowers."],     phonetics:["ˈbʌtərflaɪz","lænd","ɒn","ˈprɪti","ˈflaʊərz"],    meaning:"Butterflies drink sweet nectar from flower to flower.", level:3,age:"5–6"},,
+  // ── BONUS LEVEL 1 · Ages 3–4 ──
+  {text:"A red hen.",           scene:"🐔",words:["A","red","hen."],               phonetics:["ə","rɛd","hɛn"],                     meaning:"A bright red hen on the farm.",                level:1,age:"3–4"},
+  {text:"The bat is flat.",     scene:"🦇",words:["The","bat","is","flat."],        phonetics:["ðə","bæt","ɪz","flæt"],              meaning:"The bat has flat wings to fly.",               level:1,age:"3–4"},
+  {text:"I see a fox.",         scene:"🦊",words:["I","see","a","fox."],            phonetics:["aɪ","siː","ə","fɒks"],               meaning:"A clever orange fox is over there.",            level:1,age:"3–4"},
+  {text:"The dog digs.",        scene:"🐶",words:["The","dog","digs."],             phonetics:["ðə","dɒɡ","dɪɡz"],                  meaning:"The dog digs a hole in the garden.",           level:1,age:"3–4"},
+  {text:"I can skip.",          scene:"🎀",words:["I","can","skip."],               phonetics:["aɪ","kæn","skɪp"],                   meaning:"Watch me skip along the path!",                level:1,age:"3–4"},
+  {text:"It is cold.",          scene:"❄️",words:["It","is","cold."],               phonetics:["ɪt","ɪz","koʊld"],                   meaning:"The weather is very cold today.",              level:1,age:"3–4"},
+  {text:"The jet is fast.",     scene:"✈️",words:["The","jet","is","fast."],        phonetics:["ðə","dʒɛt","ɪz","fɑːst"],           meaning:"A jet plane flies very very fast.",             level:1,age:"3–4"},
+  {text:"A wet dog ran.",       scene:"🐕",words:["A","wet","dog","ran."],          phonetics:["ə","wɛt","dɒɡ","ræn"],              meaning:"The dog got wet and ran away!",                level:1,age:"3–4"},
+  {text:"I am glad.",           scene:"😊",words:["I","am","glad."],               phonetics:["aɪ","æm","ɡlæd"],                    meaning:"I feel very happy right now.",                  level:1,age:"3–4"},
+  {text:"The fish can swim.",   scene:"🐟",words:["The","fish","can","swim."],      phonetics:["ðə","fɪʃ","kæn","swɪm"],            meaning:"Fish use their fins and tail to swim.",        level:1,age:"3–4"},
+  // ── BONUS LEVEL 2 · Ages 4–5 ──
+  {text:"The puppy likes to play.",      scene:"🐶",words:["The","puppy","likes","to","play."],       phonetics:["ðə","ˈpʌpi","laɪks","tə","pleɪ"],        meaning:"The little puppy loves games and fun.",        level:2,age:"4–5"},
+  {text:"She picks a red flower.",       scene:"🌹",words:["She","picks","a","red","flower."],         phonetics:["ʃiː","pɪks","ə","rɛd","ˈflaʊər"],        meaning:"She chooses the prettiest red flower.",       level:2,age:"4–5"},
+  {text:"The cake smells sweet.",        scene:"🎂",words:["The","cake","smells","sweet."],            phonetics:["ðə","keɪk","smɛlz","swiːt"],             meaning:"The warm cake has a lovely sweet smell.",     level:2,age:"4–5"},
+  {text:"I like the blue sea.",          scene:"🌊",words:["I","like","the","blue","sea."],            phonetics:["aɪ","laɪk","ðə","bluː","siː"],            meaning:"The blue sea looks beautiful and calm.",      level:2,age:"4–5"},
+  {text:"A big ship sailed past.",       scene:"🚢",words:["A","big","ship","sailed","past."],         phonetics:["ə","bɪɡ","ʃɪp","seɪld","pɑːst"],         meaning:"A huge ship glided slowly by.",                level:2,age:"4–5"},
+  {text:"The boy found a shell.",        scene:"🐚",words:["The","boy","found","a","shell."],          phonetics:["ðə","bɔɪ","faʊnd","ə","ʃɛl"],            meaning:"He spotted a pretty shell on the beach.",     level:2,age:"4–5"},
+  {text:"We sang a fun song.",           scene:"🎵",words:["We","sang","a","fun","song."],             phonetics:["wiː","sæŋ","ə","fʌn","sɒŋ"],             meaning:"We all sang together and had great fun.",     level:2,age:"4–5"},
+  {text:"The baby lamb was soft.",       scene:"🐑",words:["The","baby","lamb","was","soft."],         phonetics:["ðə","ˈbeɪbi","læm","wɒz","sɒft"],        meaning:"The fluffy lamb felt so gentle and soft.",    level:2,age:"4–5"},
+  {text:"My bike has two wheels.",       scene:"🚲",words:["My","bike","has","two","wheels."],         phonetics:["maɪ","baɪk","hæz","tuː","wiːlz"],        meaning:"I ride my bike on two round wheels.",         level:2,age:"4–5"},
+  {text:"The frog sat on a log.",        scene:"🐸",words:["The","frog","sat","on","a","log."],        phonetics:["ðə","frɒɡ","sæt","ɒn","ə","lɒɡ"],        meaning:"The frog rested on the log by the pond.",     level:2,age:"4–5"},
+  {text:"He waved at the train.",        scene:"🚂",words:["He","waved","at","the","train."],          phonetics:["hiː","weɪvd","æt","ðə","treɪn"],         meaning:"He said goodbye by waving at the train.",     level:2,age:"4–5"},
+  {text:"I love reading books.",         scene:"📚",words:["I","love","reading","books."],             phonetics:["aɪ","lʌv","ˈriːdɪŋ","bʊks"],             meaning:"Books take me on amazing adventures.",        level:2,age:"4–5"},
+  {text:"The snow is cold and white.",   scene:"❄️",words:["The","snow","is","cold","and","white."],   phonetics:["ðə","snoʊ","ɪz","koʊld","ənd","waɪt"],  meaning:"Snow falls in winter and covers everything.",  level:2,age:"4–5"},
+  {text:"She draws a big round sun.",    scene:"☀️",words:["She","draws","a","big","round","sun."],    phonetics:["ʃiː","drɔːz","ə","bɪɡ","raʊnd","sʌn"],  meaning:"She draws the sun in her picture.",           level:2,age:"4–5"},
+  {text:"The teddy is soft and brown.",  scene:"🧸",words:["The","teddy","is","soft","and","brown."],  phonetics:["ðə","ˈtɛdi","ɪz","sɒft","ənd","braʊn"], meaning:"I cuddle my soft brown teddy at night.",      level:2,age:"4–5"},
+  // ── BONUS LEVEL 3 · Ages 5–6 ──
+  {text:"The kite flew high in the breeze.",      scene:"🪁",words:["The","kite","flew","high","in","the","breeze."],      phonetics:["ðə","kaɪt","fluː","haɪ","ɪn","ðə","briːz"],      meaning:"The colourful kite soared way up into the sky.",       level:3,age:"5–6"},
+  {text:"She watered the tiny seedlings.",        scene:"🌱",words:["She","watered","the","tiny","seedlings."],             phonetics:["ʃiː","ˈwɔːtərd","ðə","ˈtaɪni","ˈsiːdlɪŋz"],      meaning:"She gave each little plant just the right amount of water.",level:3,age:"5–6"},
+  {text:"The old clock on the wall ticked.",      scene:"⏰",words:["The","old","clock","on","the","wall","ticked."],      phonetics:["ðə","oʊld","klɒk","ɒn","ðə","wɔːl","tɪkt"],      meaning:"Tick tock, the clock kept counting every second.",       level:3,age:"5–6"},
+  {text:"The cat chased the mouse under the bed.",scene:"🐱",words:["The","cat","chased","the","mouse","under","the","bed."],phonetics:["ðə","kæt","tʃeɪst","ðə","maʊs","ˈʌndər","ðə","bɛd"],meaning:"The sneaky cat ran after the little mouse.",              level:3,age:"5–6"},
+  {text:"We heard an owl hoot at night.",         scene:"🦉",words:["We","heard","an","owl","hoot","at","night."],         phonetics:["wiː","hɜːrd","ən","aʊl","huːt","æt","naɪt"],      meaning:"In the dark forest, an owl called out hoo hoo.",        level:3,age:"5–6"},
+  {text:"The children built a sandcastle.",       scene:"🏖️",words:["The","children","built","a","sandcastle."],           phonetics:["ðə","ˈtʃɪldrən","bɪlt","ə","ˈsændkɑːsl"],        meaning:"They patted wet sand into a wonderful castle shape.",   level:3,age:"5–6"},
+  {text:"A rainbow appeared after the storm.",    scene:"🌈",words:["A","rainbow","appeared","after","the","storm."],      phonetics:["ə","ˈreɪnboʊ","əˈpɪrd","ˈɑːftər","ðə","stɔːrm"], meaning:"The beautiful rainbow stretched across the whole sky.",  level:3,age:"5–6"},
+  {text:"The penguin waddled across the ice.",    scene:"🐧",words:["The","penguin","waddled","across","the","ice."],      phonetics:["ðə","ˈpɛŋɡwɪn","ˈwɒdld","əˈkrɒs","ðə","aɪs"],   meaning:"The funny penguin walked from side to side on ice.",     level:3,age:"5–6"},
+  {text:"My brother likes to paint pictures.",    scene:"🎨",words:["My","brother","likes","to","paint","pictures."],      phonetics:["maɪ","ˈbrʌðər","laɪks","tə","peɪnt","ˈpɪktʃərz"],meaning:"He uses bright colours to make beautiful paintings.",    level:3,age:"5–6"},
+  {text:"The farmer fed the hungry chickens.",    scene:"🐔",words:["The","farmer","fed","the","hungry","chickens."],      phonetics:["ðə","ˈfɑːrmər","fɛd","ðə","ˈhʌŋɡri","ˈtʃɪkɪnz"],meaning:"He scattered grain on the ground for all the hens.",     level:3,age:"5–6"},
+  {text:"Stars twinkle like diamonds in the sky.",scene:"⭐",words:["Stars","twinkle","like","diamonds","in","the","sky."],phonetics:["stɑːrz","ˈtwɪŋkl","laɪk","ˈdaɪməndz","ɪn","ðə","skaɪ"],meaning:"On a clear night the stars sparkle like tiny gems.",    level:3,age:"5–6"},
+  {text:"The baby deer hid behind its mother.",   scene:"🦌",words:["The","baby","deer","hid","behind","its","mother."],   phonetics:["ðə","ˈbeɪbi","dɪr","hɪd","bɪˈhaɪnd","ɪts","ˈmʌðər"],meaning:"The tiny fawn stayed close and safe near its mum.",     level:3,age:"5–6"},
+  {text:"She whispered a secret into my ear.",    scene:"🤫",words:["She","whispered","a","secret","into","my","ear."],    phonetics:["ʃiː","ˈwɪspərd","ə","ˈsiːkrɪt","ˈɪntuː","maɪ","ɪr"],meaning:"She leaned in close and told me something quietly.",    level:3,age:"5–6"},
+  {text:"The volcano rumbled and spat out lava.", scene:"🌋",words:["The","volcano","rumbled","and","spat","out","lava."], phonetics:["ðə","vɒlˈkeɪnoʊ","ˈrʌmbld","ənd","spæt","aʊt","ˈlɑːvə"],meaning:"Hot red lava poured slowly down the mountain side.",   level:3,age:"5–6"},
+  {text:"We watched the sunrise over the hills.", scene:"🌄",words:["We","watched","the","sunrise","over","the","hills."], phonetics:["wiː","wɒtʃt","ðə","ˈsʌnraɪz","ˈoʊvər","ðə","hɪlz"],meaning:"The sky turned pink and gold as the sun came up.",       level:3,age:"5–6"}
+];
+
+// ── Read Along State ──
+const RA = {
+  mode: 'words',      // 'words' | 'sentences'
+  category: 'animals',
+  wordIdx: 0,
+  sentIdx: 0,
+  speed: 0.75,        // TTS rate
+  autoplay: false,
+  autoTimer: null,
+  litLetterIdx: -1,
+  litWordIdx: -1,
+  wbwIdx: -1,         // word-by-word index for sentences
+  wbwTimer: null,
+  micListening: false,
+  raRecog: null,
+  wordsRead: new Set(),
+  sentsDone: new Set(),
+};
+
+function renderReadAlong(c) {
+  const categories = Object.keys(RA_WORDS);
+  c.innerHTML = `
+    <div class="section-label">Module 7 · Ages 3–6</div>
+    <div class="big-title">Read Along 📖</div>
+    <div class="sub-title">Tap words · hear them spoken · read along at your own pace</div>
+
+    <div class="ra-mode-bar">
+      <button class="ra-mode-btn ${RA.mode==='words'?'active':''}" onclick="setRAMode('words')">
+        🔤 Word Reader
+        <span style="background:${RA.mode==='words'?'var(--read)':'var(--border)'};color:${RA.mode==='words'?'#fff':'var(--muted)'};padding:1px 7px;border-radius:10px;font-size:10px">${RA.wordsRead.size} read</span>
+      </button>
+      <button class="ra-mode-btn ${RA.mode==='sentences'?'active':''}" onclick="setRAMode('sentences')">
+        📝 Sentence Reader
+        <span style="background:${RA.mode==='sentences'?'var(--read)':'var(--border)'};color:${RA.mode==='sentences'?'#fff':'var(--muted)'};padding:1px 7px;border-radius:10px;font-size:10px">${RA.sentsDone.size} done</span>
+      </button>
+    </div>
+
+    <div id="ra-body"></div>
+  `;
+  renderRABody();
+}
+
+function setRAMode(m) { RA.mode=m; stopRAAutoplay(); renderContent(); }
+
+function renderRABody() {
+  const rb = document.getElementById('ra-body');
+  if(!rb) return;
+  if(RA.mode==='words') renderRAWords(rb);
+  else renderRASentences(rb);
+}
+
+// ── WORD READER ──────────────────────────
+function renderRAWords(rb) {
+  const cats = Object.keys(RA_WORDS);
+  const words = RA_WORDS[RA.category];
+  const W = words[RA.wordIdx];
+  const letters = W.word.split('');
+
+  rb.innerHTML = `
+    <div class="ra-cat-bar">
+      ${cats.map(cat=>`
+        <button class="ra-cat ${RA.category===cat?'active':''}" onclick="setRACategory('${cat}')">
+          ${RA_WORDS[cat][0].emoji} ${cat.charAt(0).toUpperCase()+cat.slice(1)}
+        </button>`).join('')}
+    </div>
+
+    <div class="word-reader">
+      <div class="wr-card" id="wr-card">
+        <span class="wr-emoji-big" id="wr-emoji">${W.emoji}</span>
+        <div class="wr-word" id="wr-word">
+          ${letters.map((l,i)=>`<span class="wr-word-letter" id="wl${i}" onclick="speakLetter('${l}')" title="${l}">${l}</span>`).join('')}
+        </div>
+        <div class="wr-phonetic">${W.phonetic}</div>
+        <div class="wr-syllables" id="wr-syls">
+          ${W.syllables.map((s,i)=>`
+            ${i>0?'<span class="wr-syl-sep">·</span>':''}
+            <div class="wr-syl" id="wsyl${i}" onclick="tappedSyllable(${i})">${s}</div>
+          `).join('')}
+        </div>
+        <div class="wr-meaning">${W.emoji} ${W.meaning}</div>
+      </div>
+
+      <div class="word-nav">
+        <button class="wnav-btn" onclick="prevWord()" title="Previous">◀</button>
+        <span class="wnav-counter">${RA.wordIdx+1} / ${words.length}</span>
+        <button class="wnav-btn" onclick="nextWord()" title="Next">▶</button>
+      </div>
+
+      <button class="big-speak-btn" id="speak-btn" onclick="speakWholeWord()">
+        🔊 Hear it
+        <span class="sound-wave"><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span><span class="sw-bar"></span></span>
+      </button>
+
+      <div class="speed-row" style="margin-top:14px">
+        <span class="speed-label">Speed:</span>
+        ${[{v:0.5,l:'Slow 🐢'},{v:0.75,l:'Normal 🚶'},{v:1.0,l:'Fast 🐇'}].map(s=>`
+          <button class="speed-btn ${RA.speed===s.v?'active':''}" onclick="setRASpeed(${s.v})">${s.l}</button>`).join('')}
+      </div>
+
+      <div class="ra-mic-row" style="margin-top:16px">
+        <button class="ra-mic-btn ${RA.micListening?'listening':''}" id="ra-mic" onclick="toggleRAMic()" title="Try saying it!">
+          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1 1.93c-3.94-.49-7-3.85-7-7.93h2c0 3.31 2.69 6 6 6s6-2.69 6-6h2c0 4.08-3.06 7.44-7 7.93V19h3v2H9v-2h3v-2.07z"/></svg>
+        </button>
+        <div class="ra-score" id="ra-mic-score">🎤 Say it yourself!</div>
+      </div>
+    </div>
+
+    <div style="margin-top:8px">
+      <div class="section-label">${RA.category.charAt(0).toUpperCase()+RA.category.slice(1)} words</div>
+      <div class="word-tiles">
+        ${words.map((w,i)=>`
+          <div class="word-tile ${i===RA.wordIdx?'selected':''}" onclick="jumpToWord(${i})">
+            <span>${w.emoji}</span>
+            <span>${w.word}</span>
+            ${RA.wordsRead.has(RA.category+i)?'<span class="wt-done">✓</span>':''}
+          </div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function setRACategory(cat) { RA.category=cat; RA.wordIdx=0; renderRABody(); }
+function jumpToWord(i) { RA.wordIdx=i; RA.wordsRead.add(RA.category+i); renderRABody(); setTimeout(speakWholeWord,400); }
+function prevWord() { RA.wordIdx=(RA.wordIdx-1+RA_WORDS[RA.category].length)%RA_WORDS[RA.category].length; renderRABody(); }
+function nextWord() { RA.wordIdx=(RA.wordIdx+1)%RA_WORDS[RA.category].length; RA.wordsRead.add(RA.category+RA.wordIdx); renderRABody(); }
+
+function speakWholeWord() {
+  const W = RA_WORDS[RA.category][RA.wordIdx];
+  const btn = document.getElementById('speak-btn');
+  if(btn) { btn.classList.add('speaking'); setTimeout(()=>btn.classList.remove('speaking'),2000); }
+
+  // Highlight letters one by one as word is spoken
+  const letters = W.word.split('');
+  letters.forEach((_,i) => {
+    setTimeout(()=>{
+      document.querySelectorAll('.wr-word-letter').forEach(l=>l.classList.remove('lit'));
+      const el = document.getElementById('wl'+i);
+      if(el) el.classList.add('lit');
+    }, i * 260);
+    if(i===letters.length-1) {
+      setTimeout(()=>{
+        document.querySelectorAll('.wr-word-letter').forEach(l=>l.classList.remove('lit'));
+        RA.wordsRead.add(RA.category+RA.wordIdx);
+      }, letters.length * 260 + 200);
+    }
+  });
+
+  // Also animate syllables
+  W.syllables.forEach((_,i)=>{
+    setTimeout(()=>{
+      document.querySelectorAll('.wr-syl').forEach(s=>s.classList.remove('lit'));
+      const s = document.getElementById('wsyl'+i);
+      if(s) s.classList.add('lit');
+      if(i===W.syllables.length-1) setTimeout(()=>document.querySelectorAll('.wr-syl').forEach(s=>s.classList.remove('lit')), 600);
+    }, i * 420);
+  });
+
+  // Speak with phonetic breakdown (say word, then syllables)
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u1 = new SpeechSynthesisUtterance(W.word);
+  u1.rate = RA.speed; u1.pitch = 1.15; u1.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const v = voices.find(v=>v.lang.startsWith('en')&&(v.name.includes('Samantha')||v.name.includes('Karen')||v.name.includes('Moira')));
+  if(v) u1.voice = v;
+  window.speechSynthesis.speak(u1);
+
+  // After the word, say syllables slowly
+  if(W.syllables.length > 1) {
+    setTimeout(()=>{
+      const u2 = new SpeechSynthesisUtterance(W.syllables.join('... '));
+      u2.rate = 0.6; u2.pitch = 1.2; u2.volume = 1;
+      if(v) u2.voice = v;
+      window.speechSynthesis.speak(u2);
+    }, 1000);
+  }
+}
+
+function speakLetter(l) {
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(l);
+  u.rate = 0.7; u.pitch = 1.3;
+  window.speechSynthesis.speak(u);
+}
+
+function tappedSyllable(i) {
+  const W = RA_WORDS[RA.category][RA.wordIdx];
+  document.querySelectorAll('.wr-syl').forEach(s=>s.classList.remove('lit'));
+  const el = document.getElementById('wsyl'+i);
+  if(el) el.classList.add('lit');
+  setTimeout(()=>el&&el.classList.remove('lit'), 700);
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(W.syllables[i]);
+  u.rate = 0.65; u.pitch = 1.2;
+  const voices = window.speechSynthesis.getVoices();
+  const v = voices.find(v=>v.lang.startsWith('en')&&(v.name.includes('Samantha')||v.name.includes('Karen')));
+  if(v) u.voice = v;
+  window.speechSynthesis.speak(u);
+}
+
+function setRASpeed(s) { RA.speed=s; renderRABody(); }
+
+// ── MIC for Word Reader ──
+let raRecog = null, raListening = false;
+function toggleRAMic() {
+  if(raListening) stopRAMic();
+  else startRAMic();
+}
+function startRAMic() {
+  raListening = true;
+  RA.micListening = true;
+  const micBtn = document.getElementById('ra-mic');
+  const score = document.getElementById('ra-mic-score');
+  if(micBtn) micBtn.classList.add('listening');
+  if(score) { score.className='ra-score'; score.textContent='🎤 Listening...'; }
+  const W = RA_WORDS[RA.category][RA.wordIdx];
+  if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    raRecog = new SR();
+    raRecog.lang='en-US'; raRecog.interimResults=false; raRecog.maxAlternatives=3;
+    raRecog.onresult = e => {
+      const t = e.results[0][0].transcript.trim();
+      stopRAMic();
+      evaluateRAWord(t, W.word);
+    };
+    raRecog.onerror = ()=>stopRAMic();
+    raRecog.onend = ()=>{ if(raListening) stopRAMic(); };
+    try { raRecog.start(); } catch(err) {}
+  } else {
+    // Simulate after 2s if no API
+    setTimeout(()=>{
+      if(raListening) {
+        stopRAMic();
+        const sim = Math.random()>.4 ? W.word : W.word.slice(0,-1);
+        evaluateRAWord(sim, W.word);
+      }
+    }, 2000);
+  }
+}
+function stopRAMic() {
+  raListening = false; RA.micListening = false;
+  if(raRecog) try{raRecog.stop();}catch(e){}
+  const micBtn = document.getElementById('ra-mic');
+  if(micBtn) micBtn.classList.remove('listening');
+}
+function evaluateRAWord(heard, target) {
+  const score = document.getElementById('ra-mic-score');
+  if(!score) return;
+  const h = heard.toLowerCase().replace(/[^a-z]/g,'');
+  const t = target.toLowerCase();
+  if(h===t || t.includes(h) || h.includes(t)) {
+    score.className='ra-score great';
+    score.textContent='🌟 Perfect! You said "'+heard+'"';
+    awardXP(15);
+    showSuccess('You said '+target+'! ⭐');
+    setTimeout(nextWord, 2200);
+  } else if(simScore(h,t)>0.5) {
+    score.className='ra-score ok';
+    score.textContent='😊 Close! You said "'+heard+'" — try again!';
+  } else {
+    score.className='ra-score miss';
+    score.textContent='💪 You said "'+heard+'" — say "'+target+'"!';
+    setTimeout(speakWholeWord, 600);
+  }
+}
+function simScore(a,b){let m=0;for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]===b[i])m++;return m/Math.max(a.length,b.length);}
+
+// ── SENTENCE READER ──────────────────────
+let wbwTimer = null, autoplayTimer = null;
+function renderRASentences(rb) {
+  const S = RA_SENTENCES[RA.sentIdx];
+  const byLevel = [1,2,3].map(lv=>({lv,sentences:RA_SENTENCES.filter(s=>s.level===lv)}));
+
+  rb.innerHTML = `
+    <div class="ra-cat-bar">
+      ${byLevel.map(g=>`
+        <button class="ra-cat ${RA_SENTENCES[RA.sentIdx].level===g.lv?'active':''}"
+          onclick="jumpToSentLevel(${g.lv})">
+          ${ g.lv===1?'🟢 Ages 3–4':g.lv===2?'🟡 Ages 4–5':'🔵 Ages 5–6' }
+        </button>`).join('')}
+    </div>
+
+    <div class="sentence-reader">
+      <div class="sr-card">
+        <span class="sr-scene">${S.scene}</span>
+
+        <div class="sr-progress-row">
+          ${RA_SENTENCES.filter(s=>s.level===S.level).map((_,i)=>{
+            const gi = RA_SENTENCES.indexOf(RA_SENTENCES.filter(s=>s.level===S.level)[i]);
+            return `<div class="sr-prog-dot ${RA.sentsDone.has(gi)?'done':gi===RA.sentIdx?'cur':''}"></div>`;
+          }).join('')}
+        </div>
+
+        <div class="sr-sentence-wrap" id="sr-wrap">
+          ${S.words.map((w,i)=>`
+            <span class="sr-word" id="srw${i}" onclick="tapSRWord(${i})">
+              <span class="sr-phonetic-tip">${S.phonetics[i]}</span>
+              ${w}
+            </span>`).join('')}
+        </div>
+        <div class="sr-meaning">${S.meaning}</div>
+      </div>
+
+      <div class="sr-controls">
+        <button class="sr-btn primary" id="sr-play-btn" onclick="readFullSentence()">
+          🔊 Read it to me
+        </button>
+        <button class="sr-btn wbw" onclick="startWordByWord()">
+          👆 Word by word
+        </button>
+        <button class="sr-btn outline" onclick="stopWBW()">⏹ Stop</button>
+      </div>
+
+      <div class="autoplay-row">
+        <div class="autoplay-toggle ${RA.autoplay?'on':''}" onclick="toggleAutoplay()">
+          <span class="tog-track"></span>
+          <span>Auto-advance</span>
+        </div>
+        <div class="speed-row" style="margin:0">
+          <span class="speed-label">Speed:</span>
+          ${[{v:0.5,l:'🐢'},{v:0.75,l:'🚶'},{v:1.0,l:'🐇'}].map(s=>`
+            <button class="speed-btn ${RA.speed===s.v?'active':''}" onclick="setRASpeed(${s.v})">${s.l}</button>`).join('')}
+        </div>
+      </div>
+
+      <div class="ra-mic-row">
+        <button class="ra-mic-btn ${raListening?'listening':''}" id="ra-mic-s" onclick="toggleRASentMic()" title="Read along!">
+          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1 1.93c-3.94-.49-7-3.85-7-7.93h2c0 3.31 2.69 6 6 6s6-2.69 6-6h2c0 4.08-3.06 7.44-7 7.93V19h3v2H9v-2h3v-2.07z"/></svg>
+        </button>
+        <div class="ra-score" id="ra-sent-score">🎤 Try reading it yourself!</div>
+      </div>
+
+      <div class="sent-nav" style="margin-top:16px">
+        <button class="sn-btn" onclick="prevSentence()">◀ Prev</button>
+        <span class="sn-counter">${RA.sentIdx+1} of ${RA_SENTENCES.length}</span>
+        <button class="sn-btn" onclick="nextSentence()">Next ▶</button>
+      </div>
+    </div>
+
+    <div style="margin-top:16px">
+      <div class="section-label">All sentences</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+        ${RA_SENTENCES.map((s,i)=>`
+          <div onclick="jumpToSentence(${i})" style="
+            display:flex;align-items:center;gap:12px;padding:12px 16px;
+            border-radius:var(--r);border:1.5px solid ${i===RA.sentIdx?'var(--read)':RA.sentsDone.has(i)?'var(--success)':'var(--border)'};
+            background:${i===RA.sentIdx?'var(--read-s)':RA.sentsDone.has(i)?'var(--success-s)':'var(--surface)'};
+            cursor:pointer;transition:.15s;font-weight:800;font-size:13px;
+          ">
+            <span style="font-size:22px">${s.scene}</span>
+            <div style="flex:1">
+              <div style="color:${i===RA.sentIdx?'var(--read)':RA.sentsDone.has(i)?'var(--success)':'var(--text)'}">${s.text}</div>
+              <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Ages ${s.age}</div>
+            </div>
+            ${RA.sentsDone.has(i)?'<span style="color:var(--success);font-size:18px">✓</span>':i===RA.sentIdx?'<span style="color:var(--read);font-size:12px;font-weight:900">▶ NOW</span>':''}
+          </div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function jumpToSentLevel(lv) {
+  const idx = RA_SENTENCES.findIndex(s=>s.level===lv);
+  if(idx>=0) { RA.sentIdx=idx; renderRABody(); }
+}
+function prevSentence() { stopWBW(); RA.sentIdx=Math.max(0,RA.sentIdx-1); renderRABody(); }
+function nextSentence() { stopWBW(); RA.sentsDone.add(RA.sentIdx); RA.sentIdx=Math.min(RA_SENTENCES.length-1,RA.sentIdx+1); renderRABody(); }
+function jumpToSentence(i) { stopWBW(); RA.sentIdx=i; renderRABody(); }
+
+function readFullSentence() {
+  const S = RA_SENTENCES[RA.sentIdx];
+  const btn = document.getElementById('sr-play-btn');
+  if(btn) { btn.style.opacity='.7'; setTimeout(()=>btn.style.opacity='1',2000); }
+
+  // Highlight each word as sentence plays
+  S.words.forEach((_,i)=>{
+    const delay = i * (1200 / RA.speed);
+    setTimeout(()=>{
+      document.querySelectorAll('.sr-word').forEach(w=>w.classList.remove('lit'));
+      const el = document.getElementById('srw'+i);
+      if(el) el.classList.add('lit');
+    }, delay);
+    if(i===S.words.length-1) {
+      setTimeout(()=>{
+        document.querySelectorAll('.sr-word').forEach(w=>{w.classList.remove('lit');w.classList.add('read-done');});
+        RA.sentsDone.add(RA.sentIdx);
+        awardXP(20);
+        if(RA.autoplay) setTimeout(()=>{ if(RA.sentIdx<RA_SENTENCES.length-1){nextSentence();setTimeout(readFullSentence,600);} }, 1800);
+      }, delay + 1000);
+    }
+  });
+
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(S.text);
+  u.rate = RA.speed; u.pitch = 1.1; u.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const v = voices.find(v=>v.lang.startsWith('en')&&(v.name.includes('Samantha')||v.name.includes('Karen')||v.name.includes('Moira')));
+  if(v) u.voice = v;
+  window.speechSynthesis.speak(u);
+}
+
+function startWordByWord() {
+  stopWBW();
+  const S = RA_SENTENCES[RA.sentIdx];
+  let i = 0;
+  const step = () => {
+    document.querySelectorAll('.sr-word').forEach(w=>w.classList.remove('lit'));
+    if(i >= S.words.length) { RA.sentsDone.add(RA.sentIdx); awardXP(20); return; }
+    const el = document.getElementById('srw'+i);
+    if(el) el.classList.add('lit');
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(S.words[i].replace(/[.,!?]/g,''));
+    u.rate = RA.speed * 0.85; u.pitch = 1.2;
+    const voices = window.speechSynthesis.getVoices();
+    const v = voices.find(v=>v.lang.startsWith('en')&&(v.name.includes('Samantha')||v.name.includes('Karen')));
+    if(v) u.voice = v;
+    window.speechSynthesis.speak(u);
+    i++;
+    wbwTimer = setTimeout(step, Math.round(1400 / RA.speed));
+  };
+  step();
+}
+
+function tapSRWord(i) {
+  const S = RA_SENTENCES[RA.sentIdx];
+  document.querySelectorAll('.sr-word').forEach(w=>w.classList.remove('lit'));
+  const el = document.getElementById('srw'+i);
+  if(el) el.classList.add('lit');
+  setTimeout(()=>el&&el.classList.remove('lit'), 800);
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(S.words[i].replace(/[.,!?]/g,''));
+  u.rate = RA.speed * 0.8; u.pitch = 1.2;
+  const voices = window.speechSynthesis.getVoices();
+  const v = voices.find(v=>v.lang.startsWith('en')&&(v.name.includes('Samantha')||v.name.includes('Karen')));
+  if(v) u.voice = v;
+  window.speechSynthesis.speak(u);
+}
+
+function stopWBW() {
+  clearTimeout(wbwTimer);
+  if('speechSynthesis' in window) window.speechSynthesis.cancel();
+  document.querySelectorAll('.sr-word').forEach(w=>w.classList.remove('lit'));
+}
+
+function toggleAutoplay() { RA.autoplay = !RA.autoplay; renderRABody(); }
+function stopRAAutoplay() { clearTimeout(autoplayTimer); RA.autoplay=false; stopWBW(); }
+
+// ── MIC for Sentence Reader ──
+function toggleRASentMic() {
+  if(raListening) stopRAMic();
+  else startRASentMic();
+}
+function startRASentMic() {
+  raListening = true;
+  const micBtn = document.getElementById('ra-mic-s');
+  const score = document.getElementById('ra-sent-score');
+  if(micBtn) micBtn.classList.add('listening');
+  if(score) { score.className='ra-score'; score.textContent='🎤 Listening...'; }
+  const S = RA_SENTENCES[RA.sentIdx];
+  if('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    raRecog = new SR();
+    raRecog.lang='en-US'; raRecog.interimResults=false; raRecog.maxAlternatives=3;
+    raRecog.onresult = e => {
+      const t = e.results[0][0].transcript.trim();
+      stopRAMic();
+      evaluateRASentence(t, S);
+    };
+    raRecog.onerror = ()=>stopRAMic();
+    raRecog.onend = ()=>{ if(raListening) stopRAMic(); };
+    try { raRecog.start(); } catch(err) {}
+  } else {
+    setTimeout(()=>{
+      if(raListening) {
+        stopRAMic();
+        evaluateRASentence(Math.random()>.4?S.text:'The cat', S);
+      }
+    }, 2500);
+  }
+}
+function evaluateRASentence(heard, S) {
+  const score = document.getElementById('ra-sent-score');
+  if(!score) return;
+  const h = heard.toLowerCase().replace(/[^a-z ]/g,'').trim();
+  const t = S.text.toLowerCase().replace(/[^a-z ]/g,'').trim();
+  const overlap = h.split(' ').filter(w=>t.includes(w)).length;
+  const ratio = overlap / S.words.length;
+  if(ratio >= 0.8) {
+    score.className='ra-score great';
+    score.textContent = '🌟 Amazing reading! You said: "'+heard+'"';
+    awardXP(30);
+    showSuccess('You read the sentence! 📖');
+    RA.sentsDone.add(RA.sentIdx);
+    setTimeout(nextSentence, 2200);
+  } else if(ratio >= 0.5) {
+    score.className='ra-score ok';
+    score.textContent = '😊 Good try! "'+heard+'" — read along again!';
+    setTimeout(readFullSentence, 800);
+  } else {
+    score.className='ra-score miss';
+    score.textContent = '💪 Keep going! Listen first, then try!';
+    setTimeout(readFullSentence, 600);
+  }
+}
+
+// ════════════════════════════════════════
+// INIT
+
+// ════════════════════════════════════════
+updateHeader();
+renderContent(); // renders home
+</script>
+</body>
+</html>
